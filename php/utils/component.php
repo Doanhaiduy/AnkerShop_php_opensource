@@ -1,6 +1,6 @@
 <?php
 
-function component($productname, $productprice, $productimg, $productid)
+function component($productid, $productname, $productprice, $productimg)
 {
     $element = "<form action=\"./php/pages/details.php\"
     class=\" bg-white border mx-2 border-gray-200 rounded-lg shadow \" id=\"$productid\"  method=\"get\">

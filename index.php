@@ -1,9 +1,12 @@
 <?php
 require_once('./php/utils/component.php');
 require_once('./php/utils/CreateDb.php');
+require_once('./php/controllers/Product.php');
+require_once('./php/models/Product.php');
 
 // create instance of CreateDb class
-$database = new CreateDb("Productdb", "Producttb");
+$database = new CreateDb("ankershop");
+$productService = new ProductController($database->con);
 ?>
 
 <!-- 
@@ -59,20 +62,7 @@ INSERT INTO Producttb (product_name, product_price, product_image) VALUES
     <?php require_once("php/layout/header.php"); ?>
 
     <!-- Test dev -->
-    <div
-        class="fixed bottom-0 z-[200] bg-primary w-full px-6 text-white text-[24px]">
-        <ul class="flex gap-3 justify-between">
-            <li><a class="font-semibold" href="/">Home</a></li>
-            <li><a class="font-semibold" href="/detail.html">Detail</a></li>
-            <li><a class="font-semibold" href="/cart.html">Cart</a></li>
-            <li><a class="font-semibold" href="/account.html">Account</a></li>
-            <li><a class="font-semibold"
-                    href="/collections.html">Collections</a></li>
-            <li><a class="font-semibold" href="/search.html">Search</a></li>
-            <li><a class="font-semibold" href="/login.html">Login</a></li>
-            <li><a class="font-semibold" href="/register.html">Register</a></li>
-        </ul>
-    </div>
+
     <!-- /index -->
 
     <!-- Slide Show -->
@@ -100,9 +90,10 @@ INSERT INTO Producttb (product_name, product_price, product_image) VALUES
         <div class="slide-product-1">
             <!-- Product -->
             <?php
-            $result = $database->getData();
-            while ($row = mysqli_fetch_assoc($result)) {
-                component($row['product_name'], $row['product_price'], $row['product_image'], $row['id']);
+            $result = $productService->getAllProducts();
+
+            foreach ($result as $product) {
+                component($product->getId(), $product->getName(), $product->getPrice(), $product->getImage());
             }
             ?>
         </div>

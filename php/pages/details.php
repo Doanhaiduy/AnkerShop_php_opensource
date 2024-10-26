@@ -1,20 +1,27 @@
 <?php
 require_once('../utils/component.php');
 require_once('../utils/CreateDb.php');
+require_once('../controllers/Product.php');
+require_once('../models/Product.php');
+require_once('../controllers/Category.php');
+require_once('../models/Category.php');
 
 // create instance of CreateDb class
-$database = new CreateDb("Productdb", "Producttb");
+$database = new CreateDb("ankershop");
 
 if (isset($_GET['details'])) {
     $product_id = $_GET['product_id'];
-    $result = $database->getData();
-    while ($row = mysqli_fetch_assoc($result)) {
-        if ($row['id'] == $product_id) {
-            $product_name = $row['product_name'];
-            $product_price = $row['product_price'];
-            $product_image = $row['product_image'];
-        }
-    }
+    $productService = new ProductController($database->con);
+
+    $product = $productService->getProductById($product_id);
+
+    $product_name = $product->getName();
+    $product_price = $product->getPrice();
+    $product_image = $product->getImage();
+    $product_description = $product->getDescription();
+    $product_category = $product->getCategory();
+    $product_stock = $product->getStock();
+    $category_name = $productService->getCategoryById($product_category)->getName();
 }
 
 ?>
@@ -60,25 +67,14 @@ if (isset($_GET['details'])) {
     <?php require_once("../layout/header.php"); ?>
 
     <!-- Test dev -->
-    <div
-        class="fixed bottom-0 z-[200] bg-primary w-full px-6 text-white text-[24px]">
-        <ul class="flex gap-3 justify-between">
-            <li><a class="font-semibold" href="/">Home</a></li>
-            <li><a class="font-semibold" href="/detail.html">Detail</a></li>
-            <li><a class="font-semibold" href="/cart.html">Cart</a></li>
-            <li><a class="font-semibold" href="/account.html">Account</a></li>
-            <li><a class="font-semibold"
-                    href="/collections.html">Collections</a></li>
-            <li><a class="font-semibold" href="/search.html">Search</a></li>
-            <li><a class="font-semibold" href="/login.html">Login</a></li>
-            <li><a class="font-semibold" href="/register.html">Register</a></li>
-        </ul>
-    </div>
+
     <!-- /product/:id -->
     <!-- Path -->
     <div class="py-12 bg-slate-300 text-center mt-[116px]">
         <a class="text-slate-500 mx-2" href="/">Trang chủ</a> / <a
-            class="text-slate-500 mx-2" href="#">Sạc Anker</a> / <span
+            class="text-slate-500 mx-2" href="#">
+            <?php echo $category_name; ?>
+        </a> / <span
             class="mx-2">
             <?php echo $product_name; ?>
         </span>
@@ -316,10 +312,11 @@ if (isset($_GET['details'])) {
         <div class="slide-product slide-product-1">
 
             <?php
-            $result = $database->getData();
-            while ($row = mysqli_fetch_assoc($result)) {
-                component($row['product_name'], $row['product_price'], $row['product_image'], $row['id']);
+            $result = $productService->getAllProducts();
+            foreach ($result as $row) {
+                component($row->getId(), $row->getName(), $row->getPrice(), $row->getImage());
             }
+
             ?>
         </div>
     </div>
