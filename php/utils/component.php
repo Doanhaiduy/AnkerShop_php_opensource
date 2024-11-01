@@ -5,7 +5,7 @@ function component($productid, $productname, $productprice, $productimg)
     $element = "<form action=\"./php/pages/details.php\"
     class=\" bg-white border mx-2 border-gray-200 rounded-lg shadow \" id=\"$productid\"  method=\"get\">
     <button type=\"submit\" class=\"relative group\" name=\"details\">
-        <img class=\"p-4 rounded-t-lg\"
+        <img class=\"p-4 rounded-t-lg w-full aspect-square\"
             src=\"$productimg\"
             alt=\"$productname\" />
         <span
@@ -15,13 +15,12 @@ function component($productid, $productname, $productprice, $productimg)
     </button>
     <div class=\"px-5 pb-5\">
         <a href=\"#\">
-            <h5 class=\" tracking-tight text-gray-900 text-center\">
+            <h5 class=\" tracking-tight text-gray-900 text-center min-h-[50px] line-clamp-2\">
                $productname
             </h5>
         </a>
         <p
             class=\"flex items-center mt-2.5 gap-1 justify-center font-medium\">
-            <span class=\"line-through\">1,300,000₫</span>
             <span>$productprice ₫</span>
 
         </p>

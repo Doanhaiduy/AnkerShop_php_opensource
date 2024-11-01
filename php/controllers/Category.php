@@ -1,5 +1,5 @@
 <?php
-require_once '../models/Category.php';
+include_once '../models/Category.php';
 
 class CategoryController
 {

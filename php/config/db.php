@@ -5,7 +5,7 @@ class CreateDb
     public $username;
     public $password;
     public $dbname;
-    public $con;
+    public $conn;
 
     // class constructor
     public function __construct(
@@ -20,22 +20,25 @@ class CreateDb
         $this->password = $password;
 
         // create connection
-        $this->con = mysqli_connect($servername, $username, $password);
+        $this->conn = mysqli_connect($servername, $username, $password);
 
         // check connection
-        if (!$this->con) {
+        if (!$this->conn) {
             die("Connection failed: " . mysqli_connect_error());
         }
 
         // create database
         $sql = "CREATE DATABASE IF NOT EXISTS $dbname";
 
-        if (mysqli_query($this->con, $sql)) {
-            $this->con = mysqli_connect($servername, $username, $password, $dbname);
+        if (mysqli_query($this->conn, $sql)) {
+            $this->conn = mysqli_connect($servername, $username, $password, $dbname);
 
-            return $this->con;
+            return $this->conn;
         } else {
             return false;
         }
     }
 }
+
+$db = new CreateDb("ankershop");
+$conn = $db->conn;

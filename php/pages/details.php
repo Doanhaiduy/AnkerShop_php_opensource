@@ -1,17 +1,15 @@
 <?php
-require_once('../utils/component.php');
-require_once('../utils/CreateDb.php');
-require_once('../controllers/Product.php');
-require_once('../models/Product.php');
-require_once('../controllers/Category.php');
-require_once('../models/Category.php');
+include_once('../utils/component.php');
+include_once('../utils/CreateDb.php');
+include_once('../controllers/Product.php');
+include_once('../models/Product.php');
 
 // create instance of CreateDb class
 $database = new CreateDb("ankershop");
 
 if (isset($_GET['details'])) {
     $product_id = $_GET['product_id'];
-    $productService = new ProductController($database->con);
+    $productService = new ProductController($database->conn);
 
     $product = $productService->getProductById($product_id);
 
@@ -19,9 +17,8 @@ if (isset($_GET['details'])) {
     $product_price = $product->getPrice();
     $product_image = $product->getImage();
     $product_description = $product->getDescription();
-    $product_category = $product->getCategory();
+    $product_category = $product->getCategory($database->conn);
     $product_stock = $product->getStock();
-    $category_name = $productService->getCategoryById($product_category)->getName();
 }
 
 ?>
@@ -64,7 +61,7 @@ if (isset($_GET['details'])) {
 <body>
     <!-- Layout -->
     <!-- Header -->
-    <?php require_once("../layout/header.php"); ?>
+    <?php include_once("../layout/header.php"); ?>
 
     <!-- Test dev -->
 
@@ -73,7 +70,7 @@ if (isset($_GET['details'])) {
     <div class="py-12 bg-slate-300 text-center mt-[116px]">
         <a class="text-slate-500 mx-2" href="/">Trang chủ</a> / <a
             class="text-slate-500 mx-2" href="#">
-            <?php echo $category_name; ?>
+            <?php echo $product_category; ?>
         </a> / <span
             class="mx-2">
             <?php echo $product_name; ?>
@@ -368,7 +365,7 @@ if (isset($_GET['details'])) {
         </div>
     </div>
     <!-- Footer -->
-    <?php require_once("../layout/footer.php"); ?>
+    <?php include_once("../layout/footer.php"); ?>
 </body>
 
 </html>

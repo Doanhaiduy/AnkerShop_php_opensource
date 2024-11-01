@@ -1,24 +1,16 @@
 <?php
-require_once('./php/utils/component.php');
-require_once('./php/utils/CreateDb.php');
-require_once('./php/controllers/Product.php');
-require_once('./php/models/Product.php');
+
+require 'php/config/db.php';
+require 'php/controllers/Product.php';
+require 'php/models/Product.php';
+require 'php/utils/component.php';
+
 
 // create instance of CreateDb class
-$database = new CreateDb("ankershop");
-$productService = new ProductController($database->con);
-?>
+$productService = new ProductController($conn);
+$products = $productService->getAllProducts();
 
-<!-- 
-INSERT INTO Producttb (product_name, product_price, product_image) VALUES 
-('Sạc 3 Cổng Anker 735 Nano II 65W - A2667 (Series 7)', 1300000, './assets/imgs/index/Product/pro_1.webp'),
-('Sạc 3 Cổng Anker 735 Nano II 65W - A2667 (Series 7)', 1300000, './assets/imgs/index/Product/pro_1.webp'),
-('Sạc 3 Cổng Anker 735 Nano II 65W - A2667 (Series 7)', 1300000, './assets/imgs/index/Product/pro_1.webp'),
-('Sạc 3 Cổng Anker 735 Nano II 65W - A2667 (Series 7)', 1300000, './assets/imgs/index/Product/pro_1.webp'),
-('Sạc 3 Cổng Anker 735 Nano II 65W - A2667 (Series 7)', 1300000, './assets/imgs/index/Product/pro_1.webp'),
-('Sạc 3 Cổng Anker 735 Nano II 65W - A2667 (Series 7)', 1300000, './assets/imgs/index/Product/pro_1.webp'),
-('Sạc 3 Cổng Anker 735 Nano II 65W - A2667 (Series 7)', 1300000, './assets/imgs/index/Product/pro_1.webp')
--->
+?>
 
 
 <!DOCTYPE html>
@@ -59,7 +51,7 @@ INSERT INTO Producttb (product_name, product_price, product_image) VALUES
 <body>
     <!-- Layout -->
     <!-- Header -->
-    <?php require_once("php/layout/header.php"); ?>
+    <?php include_once("php/layout/header.php"); ?>
 
     <!-- Test dev -->
 
@@ -90,9 +82,7 @@ INSERT INTO Producttb (product_name, product_price, product_image) VALUES
         <div class="slide-product-1">
             <!-- Product -->
             <?php
-            $result = $productService->getAllProducts();
-
-            foreach ($result as $product) {
+            foreach ($products as $product) {
                 component($product->getId(), $product->getName(), $product->getPrice(), $product->getImage());
             }
             ?>
@@ -100,7 +90,7 @@ INSERT INTO Producttb (product_name, product_price, product_image) VALUES
     </div>
 
     <!-- Slide Product 2-->
-    <div class="py-2 overflow-x-hidden">
+    <div class="py-2 overflow-x-hidden hidden">
         <h2 class="text-[28px] font-bold text-center my-5">Sản Phẩm MỚI VỀ</h2>
         <div class="slide-product-2">
             <!-- Product -->
@@ -124,7 +114,6 @@ INSERT INTO Producttb (product_name, product_price, product_image) VALUES
                     </a>
                     <p
                         class="flex items-center mt-2.5 gap-1 justify-center font-medium">
-                        <span class="line-through">1,300,000₫</span>
                         <span>780,000₫</span>
 
                     </p>
@@ -482,7 +471,7 @@ INSERT INTO Producttb (product_name, product_price, product_image) VALUES
         </div>
     </div>
     <!-- Footer -->
-    <?php require_once("php/layout/footer.php"); ?>
+    <?php include_once("php/layout/footer.php"); ?>
 </body>
 
 </html>

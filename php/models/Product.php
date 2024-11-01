@@ -41,9 +41,12 @@ class Product
         return $this->description;
     }
 
-    public function getCategory()
+    public function getCategory($conn)
     {
-        return $this->category;
+        $sql = "SELECT * FROM product_category WHERE id = $this->category";
+        $result = $conn->query($sql);
+        $category = $result->fetch_assoc();
+        return $category['category_name'];
     }
 
     public function getImage()

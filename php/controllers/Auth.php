@@ -1,5 +1,6 @@
 <?php
-require_once './User.php';
+include_once '../models/User.php';
+session_start();
 
 class AuthController
 {
@@ -19,6 +20,18 @@ class AuthController
     public function user()
     {
         return $_SESSION['user'];
+    }
+
+    public function checkEmailAlreadyExists($email)
+    {
+        $sql = "SELECT * FROM user WHERE email_address = '$email'";
+        $result = $this->conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public function login($email, $password)
@@ -41,19 +54,24 @@ class AuthController
         session_destroy();
     }
 
-    public function register($fullName, $email, $password, $phoneNumber, $gender, $address)
+    public function register($fullName, $email, $password, $phoneNumber, $gender = 1, $address)
     {
-        $sql = "INSERT INTO users (full_name, email_address, password, phone_number, gender, email_address) VALUES ($fullName, $email, $password, $phoneNumber, $gender, $address)";
-        $result = $this->conn->query($sql);
+        $sql = "INSERT INTO user (full_name, email_address, password, phone_number, gender, user_address) VALUES ('$fullName', '$email', '$password', '$phoneNumber', '$gender', '$address')";
 
-        if ($result->num_rows > 0) {
+        $result = @mysqli_query($this->conn, $sql);
+
+
+        if ($result) {
+            $sql = "SELECT * FROM user WHERE email_address = '$email' AND password = '$password'";
+            $result = @mysqli_query($this->conn, $sql);
             $row = $result->fetch_assoc();
-            $user = new User($row['id'], $row['full_name'], $row['email_address'], $row['password'], $row['phone_number'],  $row['gender'], $row['user_address']);
-            $_SESSION['user'] = $user;
-            // add cart for user
-            $sql = "INSERT INTO carts (user_id) VALUES ('{$user->getId()}')";
 
-            $result = $this->conn->query($sql);
+            $user = new User($row['id'], $row['full_name'], $row['email_address'], $row['password'], $row['phone_number'],  $row['gender'], $row['user_address']);
+
+            $_SESSION['user'] = $user;
+            $sql = "INSERT INTO shopping_cart (user_id) VALUES ('{$user->getId()}')";
+
+            $result = @mysqli_query($this->conn, $sql);
 
             if ($result) {
                 return true;
