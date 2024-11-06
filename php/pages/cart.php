@@ -9,6 +9,7 @@ $pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
 
 $cart = new CartController($conn);
 $userId = $_SESSION['user']['id'];
+$cartId = $_SESSION['user']['cart_id'];
 
 
 $cartProduct = $cart->getCartProducts($userId);
@@ -106,10 +107,8 @@ if (isset($_POST['update_quantity'])) {
             </thead>
             <tbody>
                 <?php
-                $totalPrice = 0;
                 foreach ($cartProduct as $product) {
                     $productDetails = $productController->getProductById($product->getProduct());
-                    $totalPrice += $productDetails->getPrice() * $product->getQuantity();
                     cartItem($product->getId(), $productDetails->getName(), $productDetails->getPrice(), $productDetails->getImage(), $product->getQuantity());
                 } ?>
 
@@ -123,7 +122,7 @@ if (isset($_POST['update_quantity'])) {
                     class="bg-gray-100 outline-none p-2"></textarea>
             </div>
             <div class="text-right">
-                <p class="">Tổng <strong class="text-[24px]"><?php echo $totalPrice ?>₫</strong></p>
+                <p class="">Tổng <strong class="text-[24px]"><?php echo $cart->getTotalPrice($cartId) ?>₫</strong></p>
                 <p class="my-2 italic text-[14px]">Giao hàng & tính thuế khi bán hàng
                 </p>
                 <div class="text-[14px]">

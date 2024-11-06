@@ -24,7 +24,8 @@ if (isset($_POST['logout'])) {
             <?php echo BASE_URL; ?> 
             "><img src="./assets//imgs/logo.webp" alt=""></a>
         </div>
-        <form action="/search.html" class="w-[40%]">
+        <form class="w-[40%]"
+            action="<?php echo BASE_URL . 'php/pages/search.php' ?>" method="get">
             <input type="text"
                 class="bg-slate-200 h-[40px] w-[60%] px-2 outline-none placeholder:text-black"
                 placeholder="Tìm kiếm" name="search">
@@ -47,8 +48,6 @@ if (isset($_POST['logout'])) {
                     <input type="submit" name="logout" value="Đăng Xuất">
                 </form>';
                 } else {
-
-
                     echo '<div class="w-full"><i class="fa-solid fa-user "></i></div>';
                     echo '<div class="absolute bg-white p-2 group-hover:block hidden w-full rounded-[8px]">';
                     echo '<a class="w-full" href="' . BASE_URL . 'php/pages/login.php">Đăng Nhập</a> <br>';

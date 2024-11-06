@@ -68,7 +68,7 @@ class ProductController
         $products = array();
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $product = new Product($row['id'], $row['name'], $row['price'], $row['description'], $row['category_id'], $row['product_image'], $row['stock'], $row['discount']);
+                $product = new Product($row['id'], $row['name'], $row['price'], $row['description'], $row['category_id'], $row['product_image'], $row['stock']);
                 array_push($products, $product);
             }
         }

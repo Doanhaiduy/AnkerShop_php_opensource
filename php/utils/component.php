@@ -9,8 +9,6 @@ function productItem($productid, $productname, $productprice, $productimg)
             src=\"$productimg\"
             alt=\"$productname\" />
         <span
-            class=\"absolute top-[10px] left-[10px] px-4 text-[12px] py-1 bg-red-400 rounded-[3px] font-bold text-white\">-40%</span>
-        <span
             class=\"absolute top-[50%] translate-y-[-50%] left-[50%] translate-x-[-50%] px-4 py-1 text-center bg-red-400 text-[16px] font-bold text-white hidden group-hover:block\">MUA NHANH</span>
     </button>
     <div class=\"px-5 pb-5\">
