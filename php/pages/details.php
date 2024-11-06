@@ -1,15 +1,17 @@
 <?php
-include_once('../utils/component.php');
-include_once('../utils/CreateDb.php');
-include_once('../controllers/Product.php');
-include_once('../models/Product.php');
+session_start();
+$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
 
-// create instance of CreateDb class
-$database = new CreateDb("ankershop");
+require "../utils/component.php";
+require "../config/db.php";
+require "../controllers/Product.php";
+require "../controllers/Cart.php";
+
+$err = "";
 
 if (isset($_GET['details'])) {
     $product_id = $_GET['product_id'];
-    $productService = new ProductController($database->conn);
+    $productService = new ProductController($conn);
 
     $product = $productService->getProductById($product_id);
 
@@ -17,8 +19,22 @@ if (isset($_GET['details'])) {
     $product_price = $product->getPrice();
     $product_image = $product->getImage();
     $product_description = $product->getDescription();
-    $product_category = $product->getCategory($database->conn);
+    $product_category = $product->getCategory($conn);
     $product_stock = $product->getStock();
+}
+
+if (isset($_POST['quantity'])) {
+    $product_id = $_POST['product_id'];
+    $quantity = $_POST['quantity'];
+    $cart = new CartController($conn);
+    $cartId = $_SESSION['user']['cart_id'];
+    $result = $cart->addProductToCart($cartId, $product_id, $quantity);
+
+    if ($result) {
+        header("Location: $pathHome/php/pages/cart.php");
+    } else {
+        $err = "Thêm sản phẩm vào giỏ hàng thất bại";
+    }
 }
 
 ?>
@@ -78,7 +94,7 @@ if (isset($_GET['details'])) {
     </div>
     <!-- Detail -->
 
-    <form action="/cart.html" class="flex px-[10vw] py-6 gap-12">
+    <form class="flex px-[10vw] py-6 gap-12" method="post">
         <div class="">
             <img class="w-full object-cover"
                 src="
@@ -92,8 +108,7 @@ if (isset($_GET['details'])) {
             <span class="text-[32px] text-red-500 my-2">
                 <?php echo $product_price; ?>₫
             </span> <br>
-            <strong class="line-through my-2 block">Giá gốc:
-                1,3000,000₫</strong> <br>
+            <strong class="line-through my-2 block"></strong> <br>
             <span class="border-b block mb-4">Kết thúc sau: <strong
                     class="text-red-500 text-[18px]">1 ngày
                     23:56:42</strong></span>
@@ -126,9 +141,11 @@ if (isset($_GET['details'])) {
             </div>
             <div class="flex items-center gap-2 border-b pb-4">
                 <strong>Số lượng: </strong>
-                <input type="number" value="1"
+                <input type="number" value="1" min="1" name="quantity"
                     class="w-[60px] border px-2 py-1">
-                <button
+                <input type="hidden"
+                    name="product_id" value="<?php echo $product_id; ?>">
+                <button type="submit"
                     class="cursor-pointer hover:bg-red-600 px-3 py-1 text-white bg-red-400 font-semibold inline-flex items-center justify-center text-[18px]">
                     + Mua ngay</button>
             </div>
@@ -139,6 +156,9 @@ if (isset($_GET['details'])) {
                 <p class="cursor-pointer">Sản phẩm tiếp theo <i
                         class="fa-solid fa-arrow-right"></i></p>
             </div>
+            <?php if ($err) {
+                echo "<p class='text-red-500'>$err</p>";
+            } ?>
         </div>
         <div class="">
             <div class="mt-3 p-2 bg-gray-100">
@@ -311,7 +331,7 @@ if (isset($_GET['details'])) {
             <?php
             $result = $productService->getAllProducts();
             foreach ($result as $row) {
-                component($row->getId(), $row->getName(), $row->getPrice(), $row->getImage());
+                productItem($row->getId(), $row->getName(), $row->getPrice(), $row->getImage());
             }
 
             ?>

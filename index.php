@@ -2,7 +2,6 @@
 
 require 'php/config/db.php';
 require 'php/controllers/Product.php';
-require 'php/models/Product.php';
 require 'php/utils/component.php';
 
 
@@ -83,7 +82,7 @@ $products = $productService->getAllProducts();
             <!-- Product -->
             <?php
             foreach ($products as $product) {
-                component($product->getId(), $product->getName(), $product->getPrice(), $product->getImage());
+                productItem($product->getId(), $product->getName(), $product->getPrice(), $product->getImage());
             }
             ?>
         </div>

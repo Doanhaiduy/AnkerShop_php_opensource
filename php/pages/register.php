@@ -1,10 +1,9 @@
 <?php
-session_start();
-
 include_once '../controllers/Auth.php';
 include_once '../config/db.php';
 $auth = new AuthController($conn);
 $err = '';
+$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
 
 
 
@@ -23,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $result = $auth->register($fullName, $email, $password, $phoneNumber, $gender = 1, $address);
         if ($result) {
-            header('Location: /xampp/htdocs/BTPHP/AnkerShop/index.php');
+            header("Location: $pathHome/index.php");
         } else {
             $err = 'Đăng ký thất bại';
         }
@@ -63,9 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Header -->
     <?php include '../layout/header.php';
     if (isset($_SESSION['user'])) {
-        header('Location: /xampp/htdocs/BTPHP/AnkerShop/index.php');
-    } else {
-        $err = '';
+        // header("Location: $pathHome/index.php");
     }
     ?>
 
@@ -97,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             placeholder="Địa chỉ" name="address">
         <button class="bg-red-500 font-semibold text-white py-1 w-[350px]">Đăng ký</button>
         <p class="text-red-500"><?php echo $err; ?></p>
+        <a href="./login.php">Đăng nhập</a>
         <a href="../../index.php">Quay trở lại cửa hàng</a>
     </form>
 

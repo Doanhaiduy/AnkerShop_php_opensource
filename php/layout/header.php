@@ -3,6 +3,14 @@ if (session_id()) {
 } else {
     session_start();
 }
+
+define('BASE_URL', '/xampp/htdocs/BTPHP/AnkerShop/');
+
+$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
+if (isset($_POST['logout'])) {
+    session_destroy();
+    header("Location: $pathHome/index.php");
+}
 ?>
 <!-- Header -->
 <header class="fixed top-0 left-0 right-0 bg-white z-[10]">
@@ -12,13 +20,15 @@ if (session_id()) {
                 class="w-[40px] h-[40px] bg-primary flex items-center justify-center ">
                 <i class="fa-solid fa-bars"></i>
             </div>
-            <a href="/"><img src="./assets//imgs/logo.webp" alt=""></a>
+            <a href="
+            <?php echo BASE_URL; ?> 
+            "><img src="./assets//imgs/logo.webp" alt=""></a>
         </div>
         <form action="/search.html" class="w-[40%]">
             <input type="text"
                 class="bg-slate-200 h-[40px] w-[60%] px-2 outline-none placeholder:text-black"
-                placeholder="Tìm kiếm">
-            <button
+                placeholder="Tìm kiếm" name="search">
+            <button type="submit"
                 class="bg-red-700 w-[40px] cursor-pointer ml-[-5px] h-[40px] text-[#fff]"><i
                     class="fa-solid fa-magnifying-glass"></i></button>
         </form>
@@ -30,11 +40,34 @@ if (session_id()) {
             <p>HOTLINE: <strong>03 9999 8943</strong></p>
         </div>
         <div class="flex items-center gap-3">
-            <div class="text-primary text-[26px]">
-                <i class="fa-solid fa-user"></i>
+            <div class="text-primary text-[18px] relative group cursor-pointer w-[120px]">
+                <?php if (isset($_SESSION['user'])) {
+                    echo $_SESSION['user']['full_name'];
+                    echo ' <form method="post" class="absolute bg-white p-2 group-hover:block hidden rounded-[8px]">
+                    <input type="submit" name="logout" value="Đăng Xuất">
+                </form>';
+                } else {
+
+
+                    echo '<div class="w-full"><i class="fa-solid fa-user "></i></div>';
+                    echo '<div class="absolute bg-white p-2 group-hover:block hidden w-full rounded-[8px]">';
+                    echo '<a class="w-full" href="' . BASE_URL . 'php/pages/login.php">Đăng Nhập</a> <br>';
+                    echo '<a class="w-full" href="' . BASE_URL . 'php/pages/register.php">Đăng Ký</a>';
+                    echo '</div>';
+                }
+                ?>
+
             </div>
-            <div class="text-primary text-[26px]">
-                <i class="fa-solid fa-cart-shopping"></i>
+            <div class="text-primary text-[26px] cursor-pointer">
+                <a href="
+                <?php
+                if (isset($_SESSION['user'])) {
+                    echo BASE_URL . 'php/pages/cart.php';
+                } else {
+                    echo BASE_URL . 'php/pages/login.php';
+                }
+                ?>
+                "><i class="fa-solid fa-cart-shopping"></i></a>
             </div>
         </div>
     </div>
@@ -42,7 +75,8 @@ if (session_id()) {
     <div
         class="px-[10vw] flex gap-x-[30px] items-center flex-wrap py-2 bg-primary text-white font-bold ">
         <a href=""><i class="fa-solid fa-house"></i></a>
-        <a href="">Trang Chủ</i></a>
+        <a href="
+        <?php echo BASE_URL; ?>">Trang Chủ</i></a>
         <a href="">Pin Dự Phòng</i></a>
         <a href="">Sạc</i> <i class="fa-solid fa-angle-down"></i></a>
         <a href="">Cáp</i></a>

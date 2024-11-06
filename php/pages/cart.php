@@ -1,3 +1,42 @@
+<?php
+require '../config/db.php';
+require '../utils/component.php';
+require '../controllers/Cart.php';
+require '../controllers/Product.php';
+require '../controllers/Auth.php';
+
+$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
+
+$cart = new CartController($conn);
+$userId = $_SESSION['user']['id'];
+
+
+$cartProduct = $cart->getCartProducts($userId);
+$productController = new ProductController($conn);
+
+if (isset($_POST['delete_item'])) {
+    $productCartId = $_POST['product_cart_id'];
+    if ($productCartId) {
+        $result = $cart->removeProductFromCart($productCartId);
+        if ($result) {
+            header("Location: $pathHome/php/pages/cart.php");
+        };
+    };
+}
+
+if (isset($_POST['update_quantity'])) {
+    $productCartId = $_POST['product_cart_id'];
+    $quantity = $_POST['quantity'];
+    if ($productCartId && $quantity) {
+        $result = $cart->updateProductQuantity($productCartId, $quantity);
+        if ($result) {
+            header("Location: $pathHome/php/pages/cart.php");
+        };
+    };
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,57 +65,12 @@
 <body>
     <!-- Layout -->
     <!-- Header -->
-    <div class="fixed top-0 left-0 right-0 bg-white z-10">
-        <div class="px-[10vw] flex justify-between items-center py-4">
-            <div class="flex items-center gap-3">
-                <div
-                    class="w-[40px] h-[40px] bg-primary flex items-center justify-center">
-                    <i class="fa-solid fa-bars"></i>
-                </div>
-                <a href="/"><img src="./assets//imgs/logo.webp" alt=""></a>
-            </div>
-            <div class="w-[40%]">
-                <input type="text"
-                    class="bg-slate-200 h-[40px] w-[60%] px-2 outline-none placeholder:text-black"
-                    placeholder="Tìm kiếm">
-                <button
-                    class="bg-red-700 w-[40px] cursor-pointer ml-[-5px] h-[40px] text-[#fff]"><i
-                        class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
-            <div class="flex items-center gap-3">
-                <div
-                    class="w-8 h-8 border-[1px] border-slate-300 text-slate-300  rounded-full flex items-center justify-center">
-                    <i class="fa-solid fa-phone"></i>
-                </div>
-                <p>HOTLINE: <strong>03 9999 8943</strong></p>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="text-primary text-[26px]">
-                    <i class="fa-solid fa-user"></i>
-                </div>
-                <div class="text-primary text-[26px]">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                </div>
-            </div>
-        </div>
-        <!-- Menu -->
-        <div
-            class="px-[10vw] flex gap-x-[30px] items-center flex-wrap py-2 bg-primary text-white font-bold ">
-            <a href=""><i class="fa-solid fa-house"></i></a>
-            <a href="">Trang Chủ</i></a>
-            <a href="">Pin Dự Phòng</i></a>
-            <a href="">Sạc</i> <i class="fa-solid fa-angle-down"></i></a>
-            <a href="">Cáp</i></a>
-            <a href="">Loa</i></a>
-            <a href="">Tai Nghe</i></a>
-            <a href="">Powerhouse</i></a>
-            <a href="">AnkerWork</i></a>
-            <a href="">Nebula</i></a>
-            <a href="">Eufy</i></a>
-            <a href="">Sản Phẩn Khác</i> <i class="fa-solid fa-angle-down"></i></a>
-            <a href="">Tin Tức</i></a>
-        </div>
-    </div>
+    <?php
+    include_once '../layout/header.php';
+    if (!isset($_SESSION['user'])) {
+        header("Location: $pathHome/index.php");
+    }
+    ?>
     <!-- Test dev -->
     <div
         class="fixed bottom-0 z-[200] bg-primary w-full px-6 text-white text-[24px]">
@@ -111,92 +105,14 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- row 1 -->
-                <tr class="border-b">
-                    <td>
-                        <div class="flex items-center space-x-3">
-                            <div class="avatar">
-                                <div class="h-[250px] w-[250px]">
-                                    <img src="./assets/imgs/index/Product/pro_2.webp" />
-                                </div>
-                            </div>
-                            <div>
-                                <div class="font-bold text-[20px] mb-[20px]">
-                                    Sạc Anker 511 Nano Pro PIQ 3.0 20W - A2637 (Nano Pro)
-                                </div>
-                                <div class="text-sm opacity-50">Trắng / 18 Tháng <br> Anker
-                                </div>
-                                <button class="mt-4">Xóa</button>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <strong class="text-[24px]">270,000₫</strong>
-                    </td>
-                    <td><input type="number" class="border w-[40px] h-[40px] p-2"
-                            value="1"></td>
-                    <th>
-                        <strong class="text-[24px]">540,000₫</strong>
-                    </th>
-                </tr>
+                <?php
+                $totalPrice = 0;
+                foreach ($cartProduct as $product) {
+                    $productDetails = $productController->getProductById($product->getProduct());
+                    $totalPrice += $productDetails->getPrice() * $product->getQuantity();
+                    cartItem($product->getId(), $productDetails->getName(), $productDetails->getPrice(), $productDetails->getImage(), $product->getQuantity());
+                } ?>
 
-                <!-- row 2 -->
-                <tr class="border-b">
-                    <td>
-                        <div class="flex items-center space-x-3">
-                            <div class="avatar">
-                                <div class="h-[250px] w-[250px]">
-                                    <img src="./assets/imgs/index/Product/pro_2.webp" />
-                                </div>
-                            </div>
-                            <div>
-                                <div class="font-bold text-[20px] mb-[20px]">
-                                    Sạc Anker 511 Nano Pro PIQ 3.0 20W - A2637 (Nano Pro)
-                                </div>
-                                <div class="text-sm opacity-50">Trắng / 18 Tháng <br> Anker
-                                </div>
-                                <button class="mt-4">Xóa</button>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <strong class="text-[24px]">270,000₫</strong>
-                    </td>
-                    <td><input type="number" class="border w-[40px] h-[40px] p-2"
-                            value="1"></td>
-                    <th>
-                        <strong class="text-[24px]">540,000₫</strong>
-                    </th>
-                </tr>
-
-                <!-- row 3 -->
-                <tr class="border-b">
-                    <td>
-                        <div class="flex items-center space-x-3">
-                            <div class="avatar">
-                                <div class="h-[250px] w-[250px]">
-                                    <img src="./assets/imgs/index/Product/pro_2.webp" />
-                                </div>
-                            </div>
-                            <div>
-                                <div class="font-bold text-[20px] mb-[20px]">
-                                    Sạc Anker 511 Nano Pro PIQ 3.0 20W - A2637 (Nano Pro)
-                                </div>
-                                <div class="text-sm opacity-50">Trắng / 18 Tháng <br> Anker
-                                </div>
-                                <button class="mt-4">Xóa</button>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <strong class="text-[24px]">270,000₫</strong>
-                    </td>
-                    <td><input type="number" class="border w-[40px] h-[40px] p-2"
-                            value="1"></td>
-                    <th>
-                        <strong class="text-[24px]">540,000₫</strong>
-                    </th>
-                </tr>
             </tbody>
         </table>
         <form action="/checkouts-step1.html"
@@ -207,7 +123,7 @@
                     class="bg-gray-100 outline-none p-2"></textarea>
             </div>
             <div class="text-right">
-                <p class="">Tổng <strong class="text-[24px]">1,065,000₫</strong></p>
+                <p class="">Tổng <strong class="text-[24px]"><?php echo $totalPrice ?>₫</strong></p>
                 <p class="my-2 italic text-[14px]">Giao hàng & tính thuế khi bán hàng
                 </p>
                 <div class="text-[14px]">
@@ -266,11 +182,21 @@
         </div>
     </div>
     <!-- Footer -->
-    <div class="px-[10vw] py-6 text-center">
-        <p>&copy; 2022 - Bản quyền của Công ty cổ phẩn Mocato Việt Nam - Trụ sở: 248
-            Phú Viên, Bồ Đề, Long Biên, Hà Nội. GPĐKKD: 0109787586 do Sở Kế Hoạch và
-            Đầu Tư Hà Nội cấp ngày 22/10/2021.</p>
-    </div>
+    <?php include_once '../layout/footer.php'; ?>
+    <script>
+        const formUpdateQuantity = document.querySelectorAll('.update-quantity');
+
+        // auto submit form when change quantity
+        formUpdateQuantity.forEach(form => {
+            const inputQuantity = form.querySelector('input[name="quantity"]');
+            inputQuantity.addEventListener('change', () => {
+                if (inputQuantity.value < 1) {
+                    inputQuantity.value = 1;
+                }
+                form.submit();
+            })
+        })
+    </script>
 </body>
 
 </html>

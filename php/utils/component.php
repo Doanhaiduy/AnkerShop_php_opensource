@@ -1,6 +1,6 @@
 <?php
 
-function component($productid, $productname, $productprice, $productimg)
+function productItem($productid, $productname, $productprice, $productimg)
 {
     $element = "<form action=\"./php/pages/details.php\"
     class=\" bg-white border mx-2 border-gray-200 rounded-lg shadow \" id=\"$productid\"  method=\"get\">
@@ -31,3 +31,48 @@ function component($productid, $productname, $productprice, $productimg)
 </form>";
     echo $element;
 };
+
+function cartItem($productid, $productname, $productprice, $productimg, $quantity)
+{
+
+    $totalPrice = $productprice * $quantity;
+    $element = "<tr class=\"border-b\">
+                    <td>
+                        <div class=\"flex items-center space-x-3\">
+                            <div class=\"avatar\">
+                                <div class=\"h-[250px] w-[250px]\">
+                                    <img 
+                                    src=\"$productimg\"
+                                    alt=\"$productname\"
+             />
+                                </div>
+                            </div>
+                            <form method=\"post\">
+                                <div class=\"font-bold text-[20px] mb-[20px]\">
+                                   $productname
+                                </div>
+                                <div class=\"text-sm opacity-50\">Trắng / 18 Tháng <br> Anker
+                                </div>
+                                <input type=\"hidden\" name=\"product_cart_id\" value=\"$productid\">
+                                <button class=\"mt-4\" type=\"submit\" name=\"delete_item\" value=\"ok\">Xóa</button>
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        <strong class=\"text-[24px]\">$productprice ₫</strong>
+                    </td>
+                    <td>
+                        <form class=\"update-quantity\" method=\"post\">
+                            <input type=\"number\" name=\"quantity\" value=\"$quantity\" class=\"w-[50px] text-center\">
+                            <input type=\"hidden\" name=\"product_cart_id\" value=\"$productid\">
+                            <input type=\"hidden\" name=\"update_quantity\" value=\"ok\" class=\"hidden\">
+                            </form>
+                    </td>
+                    <th>
+                        <strong class=\"text-[24px]\">
+                            $totalPrice ₫
+                        </strong>
+                    </th>
+                </tr>";
+    echo $element;
+}

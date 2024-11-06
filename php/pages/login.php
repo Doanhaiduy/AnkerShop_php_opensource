@@ -1,5 +1,25 @@
 <?php
+include_once '../controllers/Auth.php';
+include_once '../config/db.php';
 
+$auth = new AuthController($conn);
+$err = '';
+$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    if ($email == '' || $password == '') {
+        $err = 'Vui lòng nhập đầy đủ thông tin';
+    } else {
+        $result = $auth->login($email, $password);
+        if ($result) {
+            header("Location: $pathHome/index.php");
+        } else {
+            $err = 'Đăng nhập thất bại';
+        }
+    }
+}
 
 ?>
 
@@ -34,9 +54,7 @@
     <?php
     include_once '../layout/header.php';
     if (isset($_SESSION['user'])) {
-        header('Location: /xampp/htdocs/BTPHP/AnkerShop/index.php');
-    } else {
-        $err = '';
+        header("Location: $pathHome/index.php");
     }
     ?>
 
@@ -49,18 +67,21 @@
             class="mx-2">Tài khoản</span>
     </div>
     <!-- Login -->
-    <form action="/account.html" class="my-10 flex flex-col items-center gap-3">
+    <form method="post" class="my-10 flex flex-col items-center gap-3">
         <h2 class="text-center font-bold text-[24px]">Đăng Nhập</h2>
         <input type="text"
             class="p-2 py-3 bg-gray-100 w-[350px] outline-none border"
-            placeholder="Email">
-        <input type="text"
+            placeholder="Email" name="email" \
+            value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>">
+        <input type="password"
             class="p-2 py-3 bg-gray-100 w-[350px] outline-none border"
-            placeholder="Mật khẩu">
+            placeholder="Mật khẩu" name="password"
+            value="<?php echo isset($_POST['password']) ? $_POST['password'] : ''; ?>">
         <button class="bg-red-500 font-semibold text-white py-1 w-[350px]">Đăng
             nhập</button>
+        <p class="text-red-500"><?php echo $err; ?></p>
         <a href="/">Quay trở lại cửa hàng</a>
-        <a href="#">Quên mật khẩu ?</a>
+        <a href="./register.php">Đăng ký</a>
     </form>
 
 
