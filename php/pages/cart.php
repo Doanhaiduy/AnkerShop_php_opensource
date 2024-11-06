@@ -126,10 +126,9 @@ if (isset($_POST['update_quantity'])) {
                 <p class="my-2 italic text-[14px]">Giao hàng & tính thuế khi bán hàng
                 </p>
                 <div class="text-[14px]">
-                    <button class="px-2 py-1 bg-black text-white font-semibold">Cập nhật
-                        giỏ hàng</button>
-                    <button class="px-2 py-1 bg-red-400 text-white font-semibold">Thanh
-                        toán</button>
+                    <a href="
+                    <?php echo $pathHome ?>/php/pages/checkout.php" class="px-2 py-1 bg-red-400 text-white font-semibold cursor-pointer">Thanh
+                        toán</a>
                 </div>
             </div>
         </form>

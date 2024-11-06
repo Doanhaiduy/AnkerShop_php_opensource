@@ -10,7 +10,7 @@ class Order
     protected $payment;
     protected $note;
 
-    public function __construct($id, $user, $date, $fullName, $phoneNumber, $address, $payment, $note)
+    public function __construct($id, $user, $date, $fullName, $phoneNumber, $address, $payment, $note = "")
     {
         $this->id = $id;
         $this->user = $user;

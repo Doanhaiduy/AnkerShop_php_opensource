@@ -3,13 +3,11 @@ class Payment
 {
     protected $id;
     protected $name;
-    protected $description;
 
-    public function __construct($id, $name, $description)
+    public function __construct($id, $name)
     {
         $this->id = $id;
         $this->name = $name;
-        $this->description = $description;
     }
 
     public function getId()
@@ -20,10 +18,5 @@ class Payment
     public function getName()
     {
         return $this->name;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
     }
 }

@@ -74,3 +74,29 @@ function cartItem($productid, $productname, $productprice, $productimg, $quantit
                 </tr>";
     echo $element;
 }
+
+
+
+
+function orderItem($productid, $productname, $productprice, $productimg, $quantity)
+{
+    $totalPrice = $productprice * $quantity;
+
+    $element = "<div class=\"flex items-center gap-4\">
+                    <img class=\"w-[70px] h-[70px] object-cover border rounded-[8px]\"
+                        src=\"$productimg\"
+                        alt=\"$productname\">
+                    <div class=\"flex justify-between w-full\">
+                        <div>
+                        <p class=\"font-medium text-[14px]\">
+                            $productname
+                        </p>
+                         <span class=\"text-[12px] text-gray-400\">Giá: $productprice</span> -
+                        <span class=\"text-[12px] text-gray-400\">Số lượng: $quantity</span>
+                        </div>
+                        <p>$totalPrice ₫</p>
+                    </div>
+                </div>";
+
+    echo $element;
+}

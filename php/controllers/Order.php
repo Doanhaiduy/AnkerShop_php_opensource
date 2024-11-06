@@ -1,4 +1,8 @@
 <?php
+include_once '../models/Payment.php';
+if (!isset($_SESSION)) {
+    session_start();
+}
 class OrderController
 {
 
@@ -36,36 +40,104 @@ class OrderController
     }
 
 
-    public function addItemsToOrder($orderId, $cartItems)
+    public function addItemsToOrder($orderId)
     {
-        foreach ($cartItems as $cartItem) {
-            $sql = "INSERT INTO order_line (order_id, product_id, quantity) VALUES ($orderId, {$cartItem->getProductId()}, {$cartItem->getQuantity()})";
-            $result = $this->conn->query($sql);
-            if (!$result) {
-                return false;
+        $cartId = $_SESSION['user']['cart_id'];
+
+        $sql = "SELECT * FROM shopping_cart_item WHERE cart_id=$cartId";
+        $result = $this->conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $sql = "SELECT * FROM product WHERE id=" . $row['product_id'];
+
+                $result2 = $this->conn->query($sql);
+                if ($result2->num_rows > 0) {
+                    $row2 = $result2->fetch_assoc();
+                    $productId = $row2['id'];
+                    $quantity = $row['quantity'];
+                    $price = $row2['price'];
+                }
+
+                $sql2 = "INSERT INTO order_line (order_id, product_id, quantity, price) VALUES ($orderId, $productId, $quantity, $price)";
+                $result3 = @mysqli_query($this->conn, $sql2);
+
+                if (!$result3) {
+                    return false;
+                }
             }
-        }
-        return true;
-    }
 
-    public function addOrder($order, $cartItems)
-    {
-        $itemsAdded = $this->addItemsToOrder($order->getId(), $cartItems);
-
-        if ($itemsAdded) {
-            $sql = "INSERT INTO shop_order (user_id, order_date, order_full_name, order_phone, shipping_address, payment_method_id, order_note) VALUES (
-                '{$order->getUser()}',
-                '{$order->getDate()}',
-                '{$order->getFullName()}',
-                '{$order->getPhoneNumber()}',
-                '{$order->getAddress()}',
-                '{$order->getPayment()}',
-                '{$order->getNote()}'
-            )";
-            $result = $this->conn->query($sql);
-            return $result ? true : false;
+            return true;
         } else {
             return false;
         }
     }
+
+    public function removeCartItem($cartId)
+    {
+        $sql = "DELETE FROM shopping_cart_item WHERE cart_id=$cartId";
+        $result = @mysqli_query($this->conn, $sql);
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getLastOrderId()
+    {
+        $sql = "SELECT * FROM shop_order ORDER BY id DESC LIMIT 1";
+        $result = $this->conn->query($sql);
+        $row = $result->fetch_assoc();
+        return $row['id'];
+    }
+
+    public function addOrder($order, $cartId)
+    {
+        $userId = $order->getUser();
+        $orderDate = $order->getDate();
+        $orderFullName = $order->getFullName();
+        $orderPhone = $order->getPhoneNumber();
+        $shippingAddress = $order->getAddress();
+        $paymentMethodId = $order->getPayment();
+        $orderNote = $order->getNote();
+
+        $sql = "INSERT INTO shop_order (user_id, order_date, order_full_name, order_phone, shipping_address, payment_method_id, order_note) VALUES ('$userId', '$orderDate', '$orderFullName', '$orderPhone', '$shippingAddress', '$paymentMethodId', '$orderNote')";
+        $result = @mysqli_query($this->conn, $sql);
+
+        if ($result) {
+            $orderId = $this->getLastOrderId();
+
+            $result = $this->addItemsToOrder($orderId);
+
+            if ($result) {
+                $result = $this->removeCartItem($cartId);
+                if ($result) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public function getPaymentMethods()
+    {
+        $sql = "SELECT * FROM payment_type";
+        $result = $this->conn->query($sql);
+        $paymentMethods = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $paymentMethod = new Payment($row['id'], $row['name']);
+                $paymentMethods[] = $paymentMethod;
+            }
+        }
+        return $paymentMethods;
+    }
 }
+
+// $sql = "INSERT INTO shop_order (user_id, order_date, order_full_name, order_phone, shipping_address, payment_method_id, order_note) 
