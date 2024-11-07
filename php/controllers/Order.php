@@ -27,7 +27,7 @@ class OrderController
 
     public function getOrdersByUser($user)
     {
-        $sql = "SELECT * FROM shop_order WHERE user_id='$user'";
+        $sql = "SELECT * FROM shop_order WHERE user_id='$user' ORDER BY order_date DESC";
         $result = $this->conn->query($sql);
         $orders = [];
         if ($result->num_rows > 0) {
@@ -125,6 +125,14 @@ class OrderController
         }
     }
 
+    public function getTotalPrice($orderId)
+    {
+        $sql = "SELECT SUM(price * quantity) as total FROM order_line WHERE order_id=$orderId";
+        $result = $this->conn->query($sql);
+        $row = $result->fetch_assoc();
+        return $row['total'];
+    }
+
     public function getPaymentMethods()
     {
         $sql = "SELECT * FROM payment_type";
@@ -137,6 +145,17 @@ class OrderController
             }
         }
         return $paymentMethods;
+    }
+
+    public function getPaymentMethod($paymentId)
+    {
+        $sql = "SELECT * FROM payment_type WHERE id=$paymentId";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $paymentMethod = new Payment($row['id'], $row['name']);
+            return $paymentMethod;
+        }
     }
 }
 

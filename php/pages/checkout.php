@@ -20,22 +20,57 @@ $cartProduct = $cartService->getCartProducts($userId);
 $totalPrice = $cartService->getTotalPrice($cartId);
 $paymentMethods = $orderService->getPaymentMethods();
 
+$errs = [];
+
 
 if (isset($_POST['checkout'])) {
-    $full_name = $_POST['full_name'];
-    $phone_number = $_POST['phone_number'];
-    $user_address = $_POST['user_address'];
-    $payment_method_id = $_POST['payment_method_id'];
-    $order_note = $_POST['order_note'];
+    // $full_name = $_POST['full_name'];
+    // $phone_number = $_POST['phone_number'];
+    // $user_address = $_POST['user_address'];
+    // $payment_method_id = $_POST['payment_method_id'];
+    // $order_note = $_POST['order_note'];
     $date = date('Y-m-d H:i:s');
 
-    $order = new Order(null, $userId, $date, $full_name, $phone_number, $user_address, $payment_method_id, $order_note);
-
-    $result = $orderService->addOrder($order, $cartId);
-    if ($result) {
-        header("Location: $pathHome/");
+    if (empty($_POST['full_name'])) {
+        $errs['full_name'] = 'Vui lòng nhập họ và tên';
     } else {
-        echo "Error";
+        $full_name = mysqli_real_escape_string($conn, trim($_POST['full_name']));
+    }
+
+    if (empty($_POST['phone_number'])) {
+        $errs['phone_number'] = 'Vui lòng nhập số điện thoại';
+    } else {
+        $phone_number = mysqli_real_escape_string($conn, trim($_POST['phone_number']));
+    }
+
+    if (empty($_POST['user_address'])) {
+        $errs['user_address'] = 'Vui lòng nhập địa chỉ';
+    } else {
+        $user_address = mysqli_real_escape_string($conn, trim($_POST['user_address']));
+    }
+
+    if (empty($_POST['payment_method_id'])) {
+        $errs['payment_method_id'] = 'Vui lòng chọn phương thức thanh toán';
+    } else {
+        $payment_method_id = mysqli_real_escape_string($conn, trim($_POST['payment_method_id']));
+    }
+
+    if (empty($_POST['order_note'])) {
+        $order_note = '';
+    } else {
+        $order_note = mysqli_real_escape_string($conn, trim($_POST['order_note']));
+    }
+
+
+
+    if (empty($errs)) {
+        $order = new Order(null, $userId, $date, $full_name, $phone_number, $user_address, $payment_method_id, $order_note);
+        $result = $orderService->addOrder($order, $cartId);
+        if ($result) {
+            header("Location: $pathHome/php/pages/order.php");
+        } else {
+            echo "Error";
+        }
     }
 }
 
@@ -115,7 +150,12 @@ if (isset($_POST['checkout'])) {
                         type="submit" name="checkout" value="ok"
                         class="p-3 text-white font-semibold bg-blue-600 rounded-[8px]">Thanh
                         toán</button>
+
+
                 </div>
+                <?php foreach ($errs as $err) {
+                    echo "<p class='text-red-500'>$err</p>";
+                } ?>
             </form>
             <p class="text-center mt-4 text-[12px]">Powered by DoanHaiDuy</p>
         </div>
