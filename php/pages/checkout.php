@@ -6,6 +6,8 @@ require '../controllers/Product.php';
 require '../controllers/Auth.php';
 require '../controllers/Order.php';
 require '../models/Order.php';
+require '../utils/index.php';
+
 
 $pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
 
@@ -24,11 +26,6 @@ $errs = [];
 
 
 if (isset($_POST['checkout'])) {
-    // $full_name = $_POST['full_name'];
-    // $phone_number = $_POST['phone_number'];
-    // $user_address = $_POST['user_address'];
-    // $payment_method_id = $_POST['payment_method_id'];
-    // $order_note = $_POST['order_note'];
     $date = date('Y-m-d H:i:s');
 
     if (empty($_POST['full_name'])) {
@@ -67,6 +64,8 @@ if (isset($_POST['checkout'])) {
         $order = new Order(null, $userId, $date, $full_name, $phone_number, $user_address, $payment_method_id, $order_note);
         $result = $orderService->addOrder($order, $cartId);
         if ($result) {
+            if (sendMail($_SESSION['user']['email_address'], 'Đơn hàng của bạn đã được đặt', 'Đơn hàng của bạn đã được đặt, vui lòng kiểm tra lại thông tin tại trang web, cảm ơn bạn đã mua hàng tại AnkerShop')) {
+            }
             header("Location: $pathHome/php/pages/order.php");
         } else {
             echo "Error";

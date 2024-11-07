@@ -4,11 +4,8 @@ require 'php/config/db.php';
 require 'php/controllers/Product.php';
 require 'php/utils/component.php';
 
-
-// create instance of CreateDb class
 $productService = new ProductController($conn);
 $products = $productService->getAllProducts();
-
 ?>
 
 
