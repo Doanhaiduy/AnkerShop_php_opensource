@@ -4,7 +4,7 @@ if (session_id()) {
     session_start();
 }
 
-define('BASE_URL', '/xampp/htdocs/BTPHP/AnkerShop/');
+define('BASE_URL', '/');
 
 $pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
 if (isset($_POST['logout'])) {
