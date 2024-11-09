@@ -18,7 +18,7 @@ $orderService = new OrderController($conn);
 $userId = $_SESSION['user']['id'];
 $cartId = $_SESSION['user']['cart_id'];
 
-$cartProduct = $cartService->getCartProducts($userId);
+$cartProduct = $cartService->getCartProducts($cartId);
 $totalPrice = $cartService->getTotalPrice($cartId);
 $paymentMethods = $orderService->getPaymentMethods();
 
