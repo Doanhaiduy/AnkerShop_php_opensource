@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <h2 class="text-center font-bold text-[24px]">Đăng Nhập</h2>
         <input type="text"
             class="p-2 py-3 bg-gray-100 w-[350px] outline-none border"
-            placeholder="Email" name="email" \
+            placeholder="Email" name="email"
             value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>">
         <input type="password"
             class="p-2 py-3 bg-gray-100 w-[350px] outline-none border"

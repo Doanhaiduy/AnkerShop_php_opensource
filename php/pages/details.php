@@ -7,6 +7,8 @@ require "../config/db.php";
 require "../controllers/Product.php";
 require "../controllers/Cart.php";
 
+$user = $_SESSION['user'];
+
 $productService = new ProductController($conn);
 $cartService = new CartController($conn);
 
@@ -31,6 +33,11 @@ if (isset($_GET['details'])) {
 }
 
 if (isset($_POST['quantity'])) {
+
+    if (empty($_SESSION['user'])) {
+        header("Location: $pathHome/php/pages/login.php");
+    }
+
     if (empty($errs)) {
         $product_id = mysqli_real_escape_string($conn, $_POST['product_id']);
         $quantity = mysqli_real_escape_string($conn, $_POST['quantity']);

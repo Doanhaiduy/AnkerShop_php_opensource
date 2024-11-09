@@ -69,7 +69,6 @@ class OrderController
 
             return true;
         } else {
-
             return false;
         }
     }
@@ -122,7 +121,7 @@ class OrderController
                 return false;
             }
         } else {
-            
+
             return false;
         }
     }

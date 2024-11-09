@@ -6,8 +6,8 @@ require 'php/utils/component.php';
 
 $productService = new ProductController($conn);
 $products = $productService->getAllProducts();
-?>
 
+?>
 
 <!DOCTYPE html>
 <html lang="en">

@@ -25,7 +25,8 @@ if (isset($_POST['register'])) {
     if (empty($_POST['password'])) {
         $errs[] = 'Mật khẩu không được để trống';
     } else {
-        $password = mysqli_real_escape_string($conn, $_POST['password']);
+        $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+        $password = mysqli_real_escape_string($conn, $hashed_password);
     }
 
     if (empty($_POST['phoneNumber'])) {
@@ -44,12 +45,13 @@ if (isset($_POST['register'])) {
     if (empty($errs)) {
         if ($auth->checkEmailAlreadyExists($email)) {
             $errs[] = 'Email đã tồn tại';
-        }
-        $result = $auth->register($fullName, $email, $password, $phoneNumber, $gender = 1, $address);
-        if ($result) {
-            header("Location: $pathHome/index.php");
         } else {
-            $errs[] = 'Đăng ký thất bại';
+            $result = $auth->register($fullName, $email, $password, $phoneNumber, $gender = 1, $address);
+            if ($result) {
+                header("Location: $pathHome/index.php");
+            } else {
+                $errs[] = 'Đăng ký thất bại';
+            }
         }
     }
 }
@@ -87,7 +89,7 @@ if (isset($_POST['register'])) {
     <!-- Header -->
     <?php include '../layout/header.php';
     if (isset($_SESSION['user'])) {
-        // header("Location: $pathHome/index.php");
+        header("Location: $pathHome/index.php");
     }
     ?>
 

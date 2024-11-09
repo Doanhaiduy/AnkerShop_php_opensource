@@ -51,7 +51,7 @@ class AuthController
         // lowercase email
         $email = strtolower($email);
 
-        $sql = "SELECT * FROM user WHERE email_address = '$email' AND password = '$password'";
+        $sql = "SELECT * FROM user WHERE email_address = '$email'";
 
         $result = @mysqli_query($this->conn, $sql);
 
@@ -63,8 +63,8 @@ class AuthController
 
             $user = new User($row['id'], $row['full_name'], $row['email_address'], $row['password'], $row['phone_number'], $row['gender'], $row['user_address']);
 
-            $idCart = $this->getCartId($user->getId());
-            if ($user->getEmail() == $email && $user->getPassword() == $password) {
+            if (password_verify($password, $user->getPassword()) && $user->getEmail() == $email) {
+                $idCart = $this->getCartId($user->getId());
                 $_SESSION['user'] = [
                     'id' => $user->getId(),
                     'full_name' => $user->getFullName(),
@@ -84,6 +84,8 @@ class AuthController
 
     public function register($fullName, $email, $password, $phoneNumber, $gender = 1, $address)
     {
+        $email = strtolower($email);
+
         $sql = "INSERT INTO user (full_name, email_address, password, phone_number, gender, user_address) VALUES ('$fullName', '$email', '$password', '$phoneNumber', '$gender', '$address')";
 
         $result = @mysqli_query($this->conn, $sql);
