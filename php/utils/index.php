@@ -22,6 +22,7 @@ function sendMail($to, $subject, $body)
     $mail->Subject = $subject;
     $mail->MsgHTML($body);
     if (!$mail->Send()) {
+        echo "Mailer Error: " . $mail->ErrorInfo;
         return false;
     } else {
         return true;

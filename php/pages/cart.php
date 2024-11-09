@@ -14,7 +14,7 @@ $userId = $_SESSION['user']['id'];
 $cartId = $_SESSION['user']['cart_id'];
 
 
-$cartProduct = $cartServicer->getCartProducts($userId);
+$cartProduct = $cartServicer->getCartProducts($cartId);
 
 if (isset($_POST['delete_item'])) {
     $productCartId = $_POST['product_cart_id'];

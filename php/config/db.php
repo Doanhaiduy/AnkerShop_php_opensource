@@ -6,7 +6,6 @@ class CreateDb
     public $password;
     public $dbname;
     public $conn;
-
     // class constructor
     public function __construct(
         $dbname = "ankershop",

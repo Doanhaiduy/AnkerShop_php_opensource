@@ -92,26 +92,27 @@ class AuthController
         if ($result) {
             $sql = "SELECT * FROM user WHERE email_address = '$email' AND password = '$password'";
             $result = @mysqli_query($this->conn, $sql);
+
             $row = $result->fetch_assoc();
 
             $user = new User($row['id'], $row['full_name'], $row['email_address'], $row['password'], $row['phone_number'],  $row['gender'], $row['user_address']);
-
-            $idCart = $this->getCartId($user->getId());
-
-            $_SESSION['user'] = [
-                'id' => $user->getId(),
-                'full_name' => $user->getFullName(),
-                'email_address' => $user->getEmail(),
-                'phone_number' => $user->getPhoneNumber(),
-                'user_address' => $user->getAddress(),
-                'cart_id' => $idCart
-            ];
 
             $sql = "INSERT INTO shopping_cart (user_id) VALUES ('{$user->getId()}')";
 
             $result = @mysqli_query($this->conn, $sql);
 
             if ($result) {
+                $idCart = $this->getCartId($user->getId());
+
+                $_SESSION['user'] = [
+                    'id' => $user->getId(),
+                    'full_name' => $user->getFullName(),
+                    'email_address' => $user->getEmail(),
+                    'phone_number' => $user->getPhoneNumber(),
+                    'user_address' => $user->getAddress(),
+                    'cart_id' => $idCart
+                ];
+
                 return true;
             } else {
                 return false;
