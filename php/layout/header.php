@@ -4,11 +4,21 @@ if (session_id()) {
     session_start();
 }
 
+
+
+if (isset($_SESSION['expire'])) {
+    if (time() > $_SESSION['expire']) {
+        session_unset();
+        session_destroy();
+    }
+}
+
 define('BASE_URL', '/xampp/htdocs/BTPHP/AnkerShop/');
 
 $pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
 
 if (isset($_POST['logout'])) {
+    session_unset();
     session_destroy();
     header("Location: $pathHome/index.php");
 }

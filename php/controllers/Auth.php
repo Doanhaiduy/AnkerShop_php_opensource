@@ -3,9 +3,11 @@ include_once '../models/User.php';
 session_start();
 
 class AuthController
+
 {
 
     protected $conn;
+    protected $timeout = 1800; // 30 minutes
 
     public function __construct($conn)
     {
@@ -65,6 +67,8 @@ class AuthController
 
             if (password_verify($password, $user->getPassword()) && $user->getEmail() == $email) {
                 $idCart = $this->getCartId($user->getId());
+
+                $_SESSION['expire'] = time() + $this->timeout;
                 $_SESSION['user'] = [
                     'id' => $user->getId(),
                     'full_name' => $user->getFullName(),
@@ -81,6 +85,7 @@ class AuthController
             return false;
         }
     }
+    // settimeout cho session: https://stackoverflow.com/questions/520237/how-do-i-expire-a-php-session-after-30-minutes
 
     public function register($fullName, $email, $password, $phoneNumber, $gender = 1, $address)
     {
@@ -106,6 +111,7 @@ class AuthController
             if ($result) {
                 $idCart = $this->getCartId($user->getId());
 
+                $_SESSION['expire'] = time() + $this->timeout;
                 $_SESSION['user'] = [
                     'id' => $user->getId(),
                     'full_name' => $user->getFullName(),

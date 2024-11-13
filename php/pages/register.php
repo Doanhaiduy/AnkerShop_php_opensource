@@ -110,7 +110,7 @@ if (isset($_POST['register'])) {
         <input type="text"
             class="p-2 py-3 bg-gray-100 w-[350px] outline-none border" <?php if (isset($_POST['email'])) echo 'value="' . $_POST['email'] . '"' ?>
             placeholder="Email" name="email">
-        <input type="text"
+        <input type="password"
             class="p-2 py-3 bg-gray-100 w-[350px] outline-none border"
             placeholder="Mật khẩu" name="password">
         <input type="text"
