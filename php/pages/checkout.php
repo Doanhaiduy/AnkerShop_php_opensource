@@ -95,6 +95,10 @@ if (isset($_POST['checkout'])) {
     if (!isset($_SESSION['user'])) {
         header("Location: $pathHome/index.php");
     }
+
+    if (count($cartProduct) == 0) {
+        header("Location: $pathHome/php/pages/cart.php");
+    }
     ?>
     <!-- /checkout-step1 -->
     <div class="flex  gap-8 px-[10vw] items-center justify-center">

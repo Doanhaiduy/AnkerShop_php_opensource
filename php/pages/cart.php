@@ -120,7 +120,12 @@ if (isset($_POST['update_quantity'])) {
                 </p>
                 <div class="text-[14px]">
                     <a href="
-                    <?php echo $pathHome ?>/php/pages/checkout.php" class="px-2 py-1 bg-red-400 text-white font-semibold cursor-pointer">Thanh
+                    <?php if (count($cartProduct) > 0) {
+                        echo $pathHome . "/php/pages/checkout.php";
+                    } else {
+                        echo "#";
+                    }
+                    ?>" class="px-2 py-1 bg-red-400 text-white font-semibold cursor-pointer">Thanh
                         toán</a>
                 </div>
             </div>
