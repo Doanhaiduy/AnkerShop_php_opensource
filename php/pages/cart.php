@@ -28,11 +28,17 @@ if (isset($_POST['delete_item'])) {
 
 if (isset($_POST['update_quantity'])) {
     $productCartId = $_POST['product_cart_id'];
+    $currentStock = $_POST['current_stock'];
     $quantity = $_POST['quantity'];
 
     if ($quantity < 1 || !is_numeric($quantity)) {
         $quantity = 1;
     }
+
+    if ($quantity > $currentStock) {
+        $quantity = $currentStock;
+    }
+
 
     if ($productCartId && $quantity) {
         $result = $cartServicer->updateProductQuantity($productCartId, $quantity);
@@ -102,7 +108,7 @@ if (isset($_POST['update_quantity'])) {
                 <?php
                 foreach ($cartProduct as $product) {
                     $productDetails = $productServicer->getProductById($product->getProduct());
-                    cartItem($product->getId(), $productDetails->getName(), $productDetails->getPrice(), $productDetails->getImage(), $product->getQuantity());
+                    cartItem($product->getId(), $productDetails->getName(), $productDetails->getPrice(), $productDetails->getImage(), $product->getQuantity(), $productDetails->getStock());
                 }
                 if (count($cartProduct) == 0) {
                     echo "<tr><td colspan='4' class='text-center'>Không có sản phẩm nào trong giỏ hàng</td></tr>";

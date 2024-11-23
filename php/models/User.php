@@ -8,8 +8,9 @@ class User
     protected $phoneNumber;
     protected $gender;
     protected $address;
+    protected $verified;
 
-    public function __construct($id, $fullName, $email, $password, $phoneNumber, $gender, $address)
+    public function __construct($id, $fullName, $email, $password, $phoneNumber, $gender, $address, $verified = 0)
     {
         $this->id = $id;
         $this->fullName = $fullName;
@@ -18,6 +19,7 @@ class User
         $this->phoneNumber = $phoneNumber;
         $this->gender = $gender;
         $this->address = $address;
+        $this->verified = $verified;
     }
 
     public function getId()
@@ -54,6 +56,11 @@ class User
         return $this->address;
     }
 
+    public function getVerified()
+    {
+        return $this->verified;
+    }
+
 
 
     public function setFullName($fullName)
@@ -79,5 +86,10 @@ class User
     public function setAddress($address)
     {
         $this->address = $address;
+    }
+
+    public function setVerified($verified)
+    {
+        $this->verified = $verified;
     }
 }

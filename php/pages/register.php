@@ -2,6 +2,7 @@
 include_once '../controllers/Auth.php';
 include_once '../config/db.php';
 include_once '../utils/validate.php';
+include_once '../utils/index.php';
 $auth = new AuthController($conn);
 $errs = [];
 $pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
@@ -53,9 +54,17 @@ if (isset($_POST['register'])) {
         if ($auth->checkEmailAlreadyExists($email)) {
             $errs["email"] = 'Email đã tồn tại';
         } else {
+
             $result = $auth->register($fullName, $email, $password, $phoneNumber, $gender = 1, $address);
             if ($result) {
-                header("Location: $pathHome/index.php");
+                $token = generateToken($email);
+                $urlVerify = 'http://localhost:8080/ankershop/php/pages/verifyAccount.php?token=' . $token . '&email=' . $email;
+
+                if (sendMailVerify($email, $fullName, $urlVerify)) {
+                    header("Location: $pathHome/php/pages/confirmEmail.php");
+                } else {
+                    $errs["common"] = 'Gửi mail xác minh thất bại';
+                }
             } else {
                 $errs["common"] = 'Đăng ký thất bại';
             }

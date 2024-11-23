@@ -33,7 +33,7 @@ function productItem($productid, $productname, $productprice, $productimg)
     echo $formHeader . $element;
 };
 
-function cartItem($productid, $productname, $productprice, $productimg, $quantity)
+function cartItem($productid, $productname, $productprice, $productimg, $quantity, $productStock)
 {
 
     $totalPrice = $productprice * $quantity;
@@ -69,6 +69,7 @@ function cartItem($productid, $productname, $productprice, $productimg, $quantit
                             <input type=\"number\" name=\"quantity\" value=\"$quantity\" class=\"w-[50px] text-center\">
                             <input type=\"hidden\" name=\"product_cart_id\" value=\"$productid\">
                             <input type=\"hidden\" name=\"update_quantity\" value=\"ok\" class=\"hidden\">
+                            <input type=\"hidden\" name=\"current_stock\" value=\"$productStock\" class=\"hidden\">
                             </form>
                     </td>
                     <th>

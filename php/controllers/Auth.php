@@ -63,7 +63,11 @@ class AuthController
                 return false;
             }
 
-            $user = new User($row['id'], $row['full_name'], $row['email_address'], $row['password'], $row['phone_number'], $row['gender'], $row['user_address']);
+            $user = new User($row['id'], $row['full_name'], $row['email_address'], $row['password'], $row['phone_number'], $row['gender'], $row['user_address'], $row['verified']);
+
+            if ($user->getVerified() == 0) {
+                return "not_verified";
+            }
 
             if (password_verify($password, $user->getPassword()) && $user->getEmail() == $email) {
                 $idCart = $this->getCartId($user->getId());
@@ -109,18 +113,6 @@ class AuthController
             $result = @mysqli_query($this->conn, $sql);
 
             if ($result) {
-                $idCart = $this->getCartId($user->getId());
-
-                $_SESSION['expire'] = time() + $this->timeout;
-                $_SESSION['user'] = [
-                    'id' => $user->getId(),
-                    'full_name' => $user->getFullName(),
-                    'email_address' => $user->getEmail(),
-                    'phone_number' => $user->getPhoneNumber(),
-                    'user_address' => $user->getAddress(),
-                    'cart_id' => $idCart
-                ];
-
                 return true;
             } else {
                 return false;
@@ -129,6 +121,36 @@ class AuthController
             return false;
         }
     }
+
+    public function verifyEmail($email)
+    {
+        $sql = "UPDATE user SET verified = 1 WHERE email_address = '$email'";
+        $result = @mysqli_query($this->conn, $sql);
+
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function checkVerify($email)
+    {
+        $sql = "SELECT verified FROM user WHERE email_address = '$email'";
+        $result = @mysqli_query($this->conn, $sql);
+
+        if ($result) {
+            $row = $result->fetch_assoc();
+            if ($row['verified'] == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     public function logout()
     {
         session_destroy();

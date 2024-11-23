@@ -77,7 +77,7 @@ if (isset($_POST['checkout'])) {
             $order = new Order(null, $userId, $date, $full_name, $phone_number, $user_address, $payment_method_id, $order_note);
             $result = $orderService->addOrder($order, $cartId);
             if ($result) {
-                if (sendMail($_SESSION['user']['email_address'], $_SESSION['user']['full_name'], $result, number_format($totalPrice, 0, ',', '.'))) {
+                if (sendMailOrder($_SESSION['user']['email_address'], $_SESSION['user']['full_name'], $result, number_format($totalPrice, 0, ',', '.'))) {
                     $success = "Đơn hàng của bạn đã được đặt. Mã đơn hàng: $vnp_TxnRef, Số tiền: $vnp_Amount VND.";
                 }
                 header("Location: $pathHome/php/pages/paymentStatus.php?status=success");

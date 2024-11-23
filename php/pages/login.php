@@ -28,7 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errs['common'] = 'Bạn đã đăng nhập sai quá nhiều lần, <br> vui lòng thử lại sau 5 phút';
         } else {
             $result = $auth->login($email, $password);
-            if ($result) {
+            if ($result === 'not_verified') {
+                $errs['common'] = 'Tài khoản chưa được xác minh, <br> vui lòng kiểm tra email';
+            } else if ($result) {
                 unset($_SESSION['login']);
                 header("Location: $pathHome/index.php");
             } else {
