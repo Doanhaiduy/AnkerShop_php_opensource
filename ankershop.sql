@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th10 13, 2024 lúc 01:33 PM
+-- Thời gian đã tạo: Th10 23, 2024 lúc 04:54 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.0.30
 
@@ -26,6 +26,8 @@ SET time_zone = "+00:00";
 --
 -- Cấu trúc bảng cho bảng `order_line`
 --
+CREATE DATABASE IF NOT EXISTS ankershop;
+USE ankershop;
 
 CREATE TABLE `order_line` (
   `id` int(11) NOT NULL,
@@ -39,8 +41,6 @@ CREATE TABLE `order_line` (
 -- Đang đổ dữ liệu cho bảng `order_line`
 --
 
-
--- --------------------------------------------------------
 
 --
 -- Cấu trúc bảng cho bảng `payment_type`
@@ -56,7 +56,7 @@ CREATE TABLE `payment_type` (
 --
 
 INSERT INTO `payment_type` (`id`, `name`) VALUES
-(1, 'Bank Transfer'),
+(1, 'Bank Transfer (VNPAY)'),
 (2, 'Cash on Delivery');
 
 -- --------------------------------------------------------
@@ -80,15 +80,15 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`id`, `category_id`, `name`, `description`, `product_image`, `stock`, `price`) VALUES
-(1, 1, 'Pin dự phòng Anker 523 Powercore Slim 10K PD – A1245', 'Sạc dự phòng Anker 523 PowerCore Slim – A1245 (1A1C 22.5W 10000mah Đen, cho iPhone 14/13/12 Series, S10, Pixel 4 trở lên)', 'https://ankershop.vn/wp-content/uploads/2023/12/ANKER-A9521-8.png', 100, 600000),
-(2, 1, 'Pin Dự Phòng Anker 737 PowerCore 24000 140W – A1289', 'Pin dự phòng Anker 737 dung lượng 24000mAh duy nhất hiện nay sạc được cho Laptop, Macbook ở tốc độ cao với công suất 140W Sạc 2 chiều cực mạnh', 'https://ankershop.vn/wp-content/uploads/2023/10/Pin-Du-Phong-Anker-737-PowerCore-24000-140W-A1289.png', 100, 3529000),
-(3, 1, 'Pin sạc dự phòng 20000mAh Type C PD QC 3.0 30W Anker A1384 kèm Cáp Type C', 'Pin sạc dự phòng Anker A1384 với dung lượng 20000mAh là lựa chọn hoàn hảo cho những ai cần một nguồn năng lượng dự phòng mạnh mẽ và tiện lợi. Sản phẩm này không chỉ nổi bật với dung lượng lớn mà còn được trang bị các công nghệ sạc nhanh tiên tiến như Power Delivery (PD) và Quick Charge 3.0 (QC 3.0), giúp bạn sạc thiết bị nhanh chóng và hiệu quả.', 'https://ankershop.vn/wp-content/uploads/2024/08/A1384.jpg', 59, 7900000),
-(4, 1, 'Pin dự phòng Anker PowerHouse 200 – 57600mAh – A1702', 'Pin Sạc Dự Phòng Anker Powerhouse 200Wh / 57600mAh – A1702 có thể cung cấp năng lượng cho chuyến đi của bạn, để cắm trại, bật đèn, điện thoại, máy tính xách tay, TV và thậm chí cả tủ lạnh mini.', 'https://cdn.tgdd.vn/Products/Images/57/309433/pin-sac-du-phong-polymer-10000mah-12w-ava-ds609a-thumb-1-600x600.jpg', 100, 400000),
-(5, 1, 'Sạc dự phòng Anker 335 1C1A 22.5W 20000mah (Built-In USB-C Cable) A1647', 'Được biết đến với model A1647, Sạc dự phòng Anker 335 có lớp sơn mờ ở cả hai mặt với đường viền bóng, toát lên vẻ trẻ trung, sống động mang thiết kế giống mỹ phẩm hơn là các thiết bị điện tử. Nó có bốn màu: tím hoa cà, đen ảo, trắng cực quang và hồng kem. Hơn nữa, sạc dự phòng còn kết hợp màn hình hiển thị pin dựa trên tỷ lệ phần trăm và hỗ trợ đầu ra 22,5W và đầu vào 20W.', 'https://ankershop.vn/wp-content/uploads/2023/12/Anker-A1647-.png', 70, 500000),
-(6, 4, 'Cáp 3 đầu Lightning Type C Micro 0.9m Anker A8436', 'Cáp 3 đầu Lightning Type C Micro 0.9m Anker A8436 Trắng là cáp sạc 3 trong 1 với thiết kế đơn giản cùng độ dài dây 90 cm, người dùng có thể tiện đem theo bất cứ đâu và sạc cho thiết bị của mình khi cần thiết.', 'https://ankershop.vn/wp-content/uploads/2021/07/cap-3-in-1-mfi-anker-powerline-ii-0-9m-a8436-10-.jpeg', 100, 300000),
-(7, 4, 'Cáp Anker 322 USB-C to USB-L 0.9M Nylon A81B5H21', 'Cáp Anker 322 USB-C to USB-L 0.9m Nylon A81B5H21 được làm ra từ vật liệu nylon nên độ bền cao và đạt chứng nhận chất lượng an toàn. Phụ kiện cáp Anker còn hỗ trợ sạc nhanh cho hầu hết các dòng iPhone nên sẽ giúp bạn rút ngắn tối ưu thời gian sạc hiệu quả.', 'https://ankershop.vn/wp-content/uploads/2023/12/Ca%CC%81p-Anker-22.png', 100, 5000000),
+(1, 1, 'Pin dự phòng Anker 523 Powercore Slim 10K PD – A1245', 'Sạc dự phòng Anker 523 PowerCore Slim – A1245 (1A1C 22.5W 10000mah Đen, cho iPhone 14/13/12 Series, S10, Pixel 4 trở lên)', 'https://ankershop.vn/wp-content/uploads/2023/12/ANKER-A9521-8.png', 98, 600000),
+(2, 1, 'Pin Dự Phòng Anker 737 PowerCore 24000 140W – A1289', 'Pin dự phòng Anker 737 dung lượng 24000mAh duy nhất hiện nay sạc được cho Laptop, Macbook ở tốc độ cao với công suất 140W Sạc 2 chiều cực mạnh', 'https://ankershop.vn/wp-content/uploads/2023/10/Pin-Du-Phong-Anker-737-PowerCore-24000-140W-A1289.png', 92, 3529000),
+(3, 1, 'Pin sạc dự phòng 20000mAh Type C PD QC 3.0 30W Anker A1384 kèm Cáp Type C', 'Pin sạc dự phòng Anker A1384 với dung lượng 20000mAh là lựa chọn hoàn hảo cho những ai cần một nguồn năng lượng dự phòng mạnh mẽ và tiện lợi. Sản phẩm này không chỉ nổi bật với dung lượng lớn mà còn được trang bị các công nghệ sạc nhanh tiên tiến như Power Delivery (PD) và Quick Charge 3.0 (QC 3.0), giúp bạn sạc thiết bị nhanh chóng và hiệu quả.', 'https://ankershop.vn/wp-content/uploads/2024/08/A1384.jpg', 76, 7900000),
+(4, 1, 'Pin dự phòng Anker PowerHouse 200 – 57600mAh – A1702', 'Pin Sạc Dự Phòng Anker Powerhouse 200Wh / 57600mAh – A1702 có thể cung cấp năng lượng cho chuyến đi của bạn, để cắm trại, bật đèn, điện thoại, máy tính xách tay, TV và thậm chí cả tủ lạnh mini.', 'https://cdn.tgdd.vn/Products/Images/57/309433/pin-sac-du-phong-polymer-10000mah-12w-ava-ds609a-thumb-1-600x600.jpg', 84, 400000),
+(5, 1, 'Sạc dự phòng Anker 335 1C1A 22.5W 20000mah (Built-In USB-C Cable) A1647', 'Được biết đến với model A1647, Sạc dự phòng Anker 335 có lớp sơn mờ ở cả hai mặt với đường viền bóng, toát lên vẻ trẻ trung, sống động mang thiết kế giống mỹ phẩm hơn là các thiết bị điện tử. Nó có bốn màu: tím hoa cà, đen ảo, trắng cực quang và hồng kem. Hơn nữa, sạc dự phòng còn kết hợp màn hình hiển thị pin dựa trên tỷ lệ phần trăm và hỗ trợ đầu ra 22,5W và đầu vào 20W.', 'https://ankershop.vn/wp-content/uploads/2023/12/Anker-A1647-.png', 69, 500000),
+(6, 4, 'Cáp 3 đầu Lightning Type C Micro 0.9m Anker A8436', 'Cáp 3 đầu Lightning Type C Micro 0.9m Anker A8436 Trắng là cáp sạc 3 trong 1 với thiết kế đơn giản cùng độ dài dây 90 cm, người dùng có thể tiện đem theo bất cứ đâu và sạc cho thiết bị của mình khi cần thiết.', 'https://ankershop.vn/wp-content/uploads/2021/07/cap-3-in-1-mfi-anker-powerline-ii-0-9m-a8436-10-.jpeg', 71, 300000),
+(7, 4, 'Cáp Anker 322 USB-C to USB-L 0.9M Nylon A81B5H21', 'Cáp Anker 322 USB-C to USB-L 0.9m Nylon A81B5H21 được làm ra từ vật liệu nylon nên độ bền cao và đạt chứng nhận chất lượng an toàn. Phụ kiện cáp Anker còn hỗ trợ sạc nhanh cho hầu hết các dòng iPhone nên sẽ giúp bạn rút ngắn tối ưu thời gian sạc hiệu quả.', 'https://ankershop.vn/wp-content/uploads/2023/12/Ca%CC%81p-Anker-22.png', 99, 5000000),
 (8, 4, 'Củ sạc Anker 316 1C 67W Đen (Black) A2671', 'Củ sạc Anker 316 1C 67W A2671 là một giải pháp sạc nhanh phù hợp cho tất cả các dòng điện thoại và iPad trên thị trường hiện nay. Với khả năng đáng tin cậy và tiện lợi, sản phẩm củ sạc Anker này là một sự lựa chọn tốt cho người dùng đang tìm kiếm củ sạc chất lượng.', 'https://ankershop.vn/wp-content/uploads/2023/12/Anker-316.jpg', 100, 150000),
-(9, 4, 'Củ sạc nhanh Anker 1C1A 20W Trắng A2348', 'Của sạc Anker 2 cổng 1C1A 20W A2348 sở hữu một thiết kế nhỏ gọn cùng 2 cổng ra tiện lợi. Cùng với đó sạc Anker nhiều cổng này còn được trang bị công suất sạc nhanh, hỗ trợ bổ sung năng lượng nhanh chóng.', 'https://ankershop.vn/wp-content/uploads/2023/12/Anker-A2348-1.jpg', 100, 2500000),
+(9, 4, 'Củ sạc nhanh Anker 1C1A 20W Trắng A2348', 'Của sạc Anker 2 cổng 1C1A 20W A2348 sở hữu một thiết kế nhỏ gọn cùng 2 cổng ra tiện lợi. Cùng với đó sạc Anker nhiều cổng này còn được trang bị công suất sạc nhanh, hỗ trợ bổ sung năng lượng nhanh chóng.', 'https://ankershop.vn/wp-content/uploads/2023/12/Anker-A2348-1.jpg', 97, 2500000),
 (10, 4, 'Cáp sạc Anker PowerLine III C to C 0.9m A8852 FLOW', 'Đầu ra 20V – 3A, đáp ứng nhiều mức sạc khác nhau, cáp sạc Anker có thể sạc Samsung S10 lên 50% chỉ trong 30 phút khi kết hợp với adapter Power Delivery 18W.', 'https://ankershop.vn/wp-content/uploads/2023/10/Cap-Type-C-to-Type-C-Anker-PowerLine-II.jpg', 100, 350000),
 (11, 3, 'Anker A3947 – Tai nghe không dây Bluetooth Anker Soundcore Liberty 4 NC', 'Nếu bạn đang tìm kiếm một chiếc tai nghe không dây với khả năng khử tiếng ồn hiệu quả và chất lượng âm thanh tốt, Anker Soundcore Liberty 4 NC có thể là một sự lựa chọn đáng cân nhắc.', 'https://ankershop.vn/wp-content/uploads/2024/08/tai-nghe-bluetooth-anker-soundcore-liberty-4-spa.webp', 100, 300000),
 (12, 3, 'Loa bluetooth Anker PowerConf S3 A3302 (Màu đen)', 'Loa Bluetooth Anker PowerConf S3 A3302 với 6 Mic, Nhận giọng nói nâng cao, Thời gian gọi 24 giờ, Điều khiển ứng dụng, Bluetooth 5, USB C, Loa hội nghị tương thích với các nền tảng hàng đầu, Văn phòng tại nhà.', 'https://ankershop.vn/wp-content/uploads/2023/12/Anker-PowerConf-S3.jpg', 100, 200000),
@@ -147,7 +147,6 @@ INSERT INTO `shopping_cart` (`id`, `user_id`) VALUES
 (1, 1),
 (2, 2),
 (3, 3);
-
 -- --------------------------------------------------------
 
 --
@@ -161,11 +160,9 @@ CREATE TABLE `shopping_cart_item` (
   `quantity` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-
 --
 -- Đang đổ dữ liệu cho bảng `shopping_cart_item`
 --
-
 
 -- --------------------------------------------------------
 
@@ -188,11 +185,11 @@ CREATE TABLE `shop_order` (
 -- Đang đổ dữ liệu cho bảng `shop_order`
 --
 
--- --------------------------------------------------------
 
 --
 -- Cấu trúc bảng cho bảng `user`
 --
+
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
@@ -201,17 +198,19 @@ CREATE TABLE `user` (
   `phone_number` varchar(20) DEFAULT NULL,
   `gender` varchar(10) DEFAULT '1',
   `user_address` varchar(100) DEFAULT NULL,
-  `password` varchar(500) DEFAULT NULL
+  `password` varchar(500) DEFAULT NULL,
+  `verified` varchar(10) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `user`
 --
 
-INSERT INTO `user` (`id`, `full_name`, `email_address`, `phone_number`, `gender`, `user_address`, `password`) VALUES
-(1, 'Nguyễn Thành Luân', 'luannth200x@gmail.com', '0337750905', '1', 'Thị Xã Đông Hòa , Phú Yên', 'thanhluan03'),
-(2, 'Đoàn Hải Duy', 'haiduytbt2k3@gmail.com', '0399998943', '1', 'TP.Nha Trang , Khánh Hòa', 'doanhaiduy03'),
-(3, 'Đoàn Thanh Sang', 'sang.dt03@gmail.com', '0735858276', '1', 'Huyện Tuy An , Phú Yên', 'doanthanhsang03');
+INSERT INTO `user` (`id`, `full_name`, `email_address`, `phone_number`, `gender`, `user_address`, `password`, `verified`) VALUES
+(1, 'Nguyễn Thành Luân', 'luannth20032x@gmail.com', '0337750905', '1', 'Thị Xã Đông Hòa , Phú Yên', 'thanhluan03', '1'),
+(2, 'Đoàn Hải Duy', 'haiduytbt2k33@gmail.com', '0399998943', '1', 'TP.Nha Trang , Khánh Hòa', 'doanhaiduy03', '1'),
+(3, 'Đoàn Thanh Sang', 'sang.dt0331@gmail.com', '0735858276', '1', 'Huyện Tuy An , Phú Yên', 'doanthanhsang03', '1');
+
 --
 -- Chỉ mục cho các bảng đã đổ
 --
@@ -281,7 +280,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT cho bảng `order_line`
 --
 ALTER TABLE `order_line`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT cho bảng `payment_type`
@@ -305,25 +304,25 @@ ALTER TABLE `product_category`
 -- AUTO_INCREMENT cho bảng `shopping_cart`
 --
 ALTER TABLE `shopping_cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT cho bảng `shopping_cart_item`
 --
 ALTER TABLE `shopping_cart_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT cho bảng `shop_order`
 --
 ALTER TABLE `shop_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT cho bảng `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -366,3 +365,4 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+

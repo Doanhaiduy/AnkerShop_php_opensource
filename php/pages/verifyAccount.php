@@ -35,6 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = $_GET['email'];
 
         $token = generateToken($_GET['email']);
+        // Thay đổi đường dẫn verify theo domain hoặc port đang chạy: ví dụ localhost:8080/ankershop/php/pages/verifyAccount.php
+        // Thay đổi domain thành domain thật khi chạy trên production: ví dụ domain.com/ankershop/php/pages/verifyAccount.php
         $urlVerify = 'http://localhost:8080/ankershop/php/pages/verifyAccount.php?token=' . $token . '&email=' . $email;
 
         if ($authService->checkEmailAlreadyExists($email)) {

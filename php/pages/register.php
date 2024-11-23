@@ -58,6 +58,8 @@ if (isset($_POST['register'])) {
             $result = $auth->register($fullName, $email, $password, $phoneNumber, $gender = 1, $address);
             if ($result) {
                 $token = generateToken($email);
+                // Thay đổi đường dẫn verify theo domain hoặc port đang chạy: ví dụ localhost:8080/ankershop/php/pages/verifyAccount.php
+                // Thay đổi domain thành domain thật khi chạy trên production: ví dụ domain.com/ankershop/php/pages/verifyAccount.php
                 $urlVerify = 'http://localhost:8080/ankershop/php/pages/verifyAccount.php?token=' . $token . '&email=' . $email;
 
                 if (sendMailVerify($email, $fullName, $urlVerify)) {

@@ -14,6 +14,7 @@ $mail->Port = 465;
 
 function sendMailOrder($to, $customerName, $orderNumber, $totalAmount)
 {
+    // thay đổi dòng 143 thành domain hoặc localhost có cổng đang chạy (ví dụ: localhost:8080/ankershop hoặc doanhaiduy.id.vn hoặc localhost/ankershop)
     $body = '
     <!DOCTYPE html>
 <html lang="vi">
@@ -139,7 +140,7 @@ function sendMailOrder($to, $customerName, $orderNumber, $totalAmount)
                 </div>
                 <p>Bạn có thể theo dõi tình trạng đơn hàng của mình tại liên kết
                     dưới đây:</p>
-                <a href="https://yourwebsite.com/track-order?order=' . urlencode($orderNumber) . '"
+                <a href="http://localhost:8080/php/pages/order.php"
                     class="track-order-btn">Theo dõi đơn hàng</a>
                 <p>Nếu bạn có bất kỳ câu hỏi hoặc cần hỗ trợ, vui lòng liên hệ
                     với chúng tôi qua email <a
@@ -318,7 +319,7 @@ function sendMailVerify($to, $customerName, $urlVerify)
 
 function generateToken($email)
 {
-    $secretKey = "395e7995b1360b7df3e56f3e19ddc364";
+    $secretKey = "395e7995b1360b7df3e56f3e19ddc364"; // secret key duy nhất (không được tiết lộ)
     return hash_hmac('sha256', $email, $secretKey);
 }
 

@@ -14,8 +14,9 @@ if (isset($_SESSION['expire'])) {
 }
 
 // define('BASE_URL', '/xampp/htdocs/AnkerShop/');
+// Thay đổi BASE_URL tại đây: ví dụ chạy bằng xamp với thư mục ankershop là thư mục gốc của dự án nằm ở htdocs: 
 define('BASE_URL', '/ankershop/');
-
+// Trường hợp đẩy lên hosting thì thay đổi BASE_URL thành thư mục chứa dự án trên hosting hoặc '/' nếu dự án nằm ở thư mục gốc
 
 $pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
 

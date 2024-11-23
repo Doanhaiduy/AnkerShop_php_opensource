@@ -8,6 +8,7 @@ class CreateDb
     public $conn;
     // class constructor
     public function __construct(
+        // Thay đổi thông tin kết nối tại đây
         $dbname = "ankershop",
         $servername = "localhost",
         $username = "root",

@@ -3,7 +3,6 @@
 function processVnpayPayment($conn, $cartId, $userId, $date, $full_name, $phone_number, $user_address, $payment_method_id, $order_note)
 {
     $cartService = new CartController($conn);
-    $orderService = new OrderController($conn);
 
     $totalPrice = $cartService->getTotalPrice($cartId);
 
@@ -11,9 +10,10 @@ function processVnpayPayment($conn, $cartId, $userId, $date, $full_name, $phone_
     $vnp_TmnCode = "MHGV26YG";
     $vnp_HashSecret = "YNZ25C7DP14IF8QR5EBEVC5GIAWU033G";
     $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    $vnp_Returnurl = "http://localhost:8080/ankershop/php/pages/returnvnpay.php"; // 
+    // Thay đổi liên kết thành https:domain.com/paymentv2/vpcpay.html khi chạy trên production (ví dụ ở đây là domain: doanhaiduy.id.vn)
+    // Đối với localhost: thay đổi port 8080 thành port đang chạy (thường là 80) và thêm tên thư mục nếu đó là thư mục gốc (ở đây là ankershop)
+    $vnp_Returnurl = "http://localhost:8080/ankershop/php/pages/returnvnpay.php";
 
-    // Append additional parameters to the return URL
     $vnp_Returnurl .= "?userId=" . urlencode($userId) . "&date=" . urlencode($date) . "&full_name=" . urlencode($full_name) . "&phone_number=" . urlencode($phone_number) . "&user_address=" . urlencode($user_address) . "&payment_method_id=" . urlencode($payment_method_id) . "&order_note=" . urlencode($order_note);
 
     $vnp_Params = array(
