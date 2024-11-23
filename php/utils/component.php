@@ -2,8 +2,11 @@
 
 function productItem($productid, $productname, $productprice, $productimg)
 {
-    $element = "<form action=\"./php/pages/details.php\"
-    class=\" bg-white border mx-2 border-gray-200 rounded-lg shadow \" id=\"$productid\"  method=\"get\">
+
+    $priceFormatted = number_format($productprice, 0, ',', '.') . ' ₫';
+
+    $formHeader = "<form action=\"" . BASE_URL . "php/pages/details.php\" ";
+    $element =  "class=\" bg-white border mx-2 border-gray-200 rounded-lg shadow \" id=\"$productid\"  method=\"get\">
     <button type=\"submit\" class=\"relative group\" name=\"details\">
         <img class=\"p-4 rounded-t-lg w-full aspect-square\"
             src=\"$productimg\"
@@ -19,7 +22,7 @@ function productItem($productid, $productname, $productprice, $productimg)
         </a>
         <p
             class=\"flex items-center mt-2.5 gap-1 justify-center font-medium\">
-            <span>$productprice ₫</span>
+            <span>$priceFormatted</span>
 
         </p>
     </div>
@@ -27,13 +30,15 @@ function productItem($productid, $productname, $productprice, $productimg)
     <p class=\"text-center px-3\">Kết thúc sau: <strong
             class=\"text-red-600\">2 ngày 4 : 30 : 34</strong></p>
 </form>";
-    echo $element;
+    echo $formHeader . $element;
 };
 
 function cartItem($productid, $productname, $productprice, $productimg, $quantity)
 {
 
     $totalPrice = $productprice * $quantity;
+    $priceFormatted = number_format($productprice, 0, ',', '.') . ' ₫';
+    $totalPriceFormatted = number_format($totalPrice, 0, ',', '.') . ' ₫';
     $element = "<tr class=\"border-b\">
                     <td>
                         <div class=\"flex items-center space-x-3\">
@@ -57,7 +62,7 @@ function cartItem($productid, $productname, $productprice, $productimg, $quantit
                         </div>
                     </td>
                     <td>
-                        <strong class=\"text-[24px]\">$productprice ₫</strong>
+                        <strong class=\"text-[24px]\">$priceFormatted</strong>
                     </td>
                     <td>
                         <form class=\"update-quantity\" method=\"post\">
@@ -68,7 +73,7 @@ function cartItem($productid, $productname, $productprice, $productimg, $quantit
                     </td>
                     <th>
                         <strong class=\"text-[24px]\">
-                            $totalPrice ₫
+                            $totalPriceFormatted
                         </strong>
                     </th>
                 </tr>";
@@ -81,6 +86,8 @@ function cartItem($productid, $productname, $productprice, $productimg, $quantit
 function orderItem($productid, $productname, $productprice, $productimg, $quantity)
 {
     $totalPrice = $productprice * $quantity;
+    $priceFormatted = number_format($productprice, 0, ',', '.') . ' ₫';
+    $totalPriceFormatted = number_format($totalPrice, 0, ',', '.') . ' ₫';
 
     $element = "<div class=\"flex items-center gap-4\">
                     <img class=\"w-[70px] h-[70px] object-cover border rounded-[8px]\"
@@ -91,10 +98,10 @@ function orderItem($productid, $productname, $productprice, $productimg, $quanti
                         <p class=\"font-medium text-[14px]\">
                             $productname
                         </p>
-                         <span class=\"text-[12px] text-gray-400\">Giá: $productprice</span> -
+                         <span class=\"text-[12px] text-gray-400\">Giá: $priceFormatted</span> -
                         <span class=\"text-[12px] text-gray-400\">Số lượng: $quantity</span>
                         </div>
-                        <p>$totalPrice ₫</p>
+                        <p>$totalPriceFormatted</p>
                     </div>
                 </div>";
 
@@ -104,6 +111,7 @@ function orderItem($productid, $productname, $productprice, $productimg, $quanti
 
 function orderedItem($orderid, $orderdate, $orderprice, $paymentMethod)
 {
+    $orderFormatted = number_format($orderprice, 0, ',', '.') . ' ₫';
     $element = "<tr>
                     <td
                         class=\"px-5 py-5 border-b border-gray-200 bg-white text-sm\">
@@ -126,7 +134,7 @@ function orderedItem($orderid, $orderdate, $orderprice, $paymentMethod)
                     <td
                         class=\"px-5 py-5 border-b border-gray-200 bg-white text-sm\">
                         <p class=\"text-gray-900 whitespace-no-wrap\">
-                            $orderprice ₫
+                            $orderFormatted
                         </p>
                     </td>
                     <td

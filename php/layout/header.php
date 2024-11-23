@@ -13,7 +13,9 @@ if (isset($_SESSION['expire'])) {
     }
 }
 
-define('BASE_URL', '/xampp/htdocs/BTPHP/AnkerShop/');
+// define('BASE_URL', '/xampp/htdocs/AnkerShop/');
+define('BASE_URL', '/ankershop/');
+
 
 $pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
 

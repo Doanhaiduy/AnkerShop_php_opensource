@@ -7,7 +7,9 @@ require "../config/db.php";
 require "../controllers/Product.php";
 require "../controllers/Cart.php";
 
-$user = $_SESSION['user'];
+if (isset($_SESSION['user'])) {
+    $user = $_SESSION['user'];
+}
 
 $productService = new ProductController($conn);
 $cartService = new CartController($conn);
@@ -23,13 +25,13 @@ if (isset($_GET['details'])) {
 
 
     $product = $productService->getProductById($product_id);
-
     $product_name = $product->getName();
     $product_price = $product->getPrice();
     $product_image = $product->getImage();
     $product_description = $product->getDescription();
     $product_category = $product->getCategory($conn);
     $product_stock = $product->getStock();
+    $productSameCategory = $productService->getProductsByCategory($product->getCategoryId());
 }
 
 if (isset($_POST['quantity'])) {
@@ -37,6 +39,19 @@ if (isset($_POST['quantity'])) {
     if (empty($_SESSION['user'])) {
         header("Location: $pathHome/php/pages/login.php");
     }
+
+    if (empty($_POST['product_id'])) {
+        $errs[] = "Không tìm thấy sản phẩm";
+    }
+
+    if (empty($_POST['quantity'])) {
+        $errs[] = "Số lượng không được để trống";
+    } else if (!is_numeric($_POST['quantity'])) {
+        $errs[] = "Số lượng phải là số";
+    } else if ($_POST['quantity'] > $product_stock) {
+        $errs[] = "Số lượng sản phẩm không đủ";
+    }
+
 
     if (empty($errs)) {
         $product_id = mysqli_real_escape_string($conn, $_POST['product_id']);
@@ -122,36 +137,26 @@ if (isset($_POST['quantity'])) {
                 <?php echo $product_name; ?>
             </h3>
             <span class="text-[32px] text-red-500 my-2">
-                <?php echo $product_price; ?>₫
+                <?php echo $priceFormatted = number_format($product_price, 0, ',', '.') . ' ₫';; ?>
             </span> <br>
             <strong class="line-through my-2 block"></strong> <br>
             <span class="border-b block mb-4">Kết thúc sau: <strong
                     class="text-red-500 text-[18px]">1 ngày
                     23:56:42</strong></span>
-            <div class="">
-                <strong>MÀU SẮC</strong>
-                <div class="flex items-center gap-2">
-                    <div class="flex items-center px-2  border">
-                        <img src="
-                        <?php echo $product_image; ?>
-                        "
-                            class="w-[40px] h-[40px]" alt="">
-                        <span>ĐEN</span>
-                    </div>
-                    <div class="flex items-center px-2 border">
-                        <img src="
-                        <?php echo $product_image; ?>
-                        "
-                            class="w-[40px] h-[40px]" alt="">
-                        <span>TRẮNG</span>
-                    </div>
-                </div>
-            </div>
+
             <div class="my-4">
                 <strong>BẢO HÀNH</strong>
                 <div class="flex items-center gap-2">
                     <div class="flex items-center px-2 py-2  border">
                         <span>18 THÁNG</span>
+                    </div>
+                </div>
+            </div>
+            <div class="my-4">
+                <strong>Còn lại: </strong>
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center px-2 py-2  border">
+                        <span><?php echo $product_stock ?> sản phẩm</span>
                     </div>
                 </div>
             </div>
@@ -345,8 +350,7 @@ if (isset($_POST['quantity'])) {
         <div class="slide-product slide-product-1">
 
             <?php
-            $result = $productService->getAllProducts();
-            foreach ($result as $row) {
+            foreach ($productSameCategory as $row) {
                 productItem($row->getId(), $row->getName(), $row->getPrice(), $row->getImage());
             }
 

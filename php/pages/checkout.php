@@ -7,6 +7,7 @@ require '../controllers/Auth.php';
 require '../controllers/Order.php';
 require '../models/Order.php';
 require '../utils/index.php';
+require '../utils/validate.php';
 
 
 $pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
@@ -22,6 +23,7 @@ $cartProduct = $cartService->getCartProducts($cartId);
 $totalPrice = $cartService->getTotalPrice($cartId);
 $paymentMethods = $orderService->getPaymentMethods();
 
+
 $errs = [];
 
 
@@ -31,12 +33,18 @@ if (isset($_POST['checkout'])) {
     if (empty($_POST['full_name'])) {
         $errs['full_name'] = 'Vui lòng nhập họ và tên';
     } else {
+        if (!regexFullName($_POST['full_name'])) {
+            $errs['full_name'] = 'Họ và tên không hợp lệ';
+        }
         $full_name = mysqli_real_escape_string($conn, trim($_POST['full_name']));
     }
 
     if (empty($_POST['phone_number'])) {
         $errs['phone_number'] = 'Vui lòng nhập số điện thoại';
     } else {
+        if (!regexPhoneNumber($_POST['phone_number'])) {
+            $errs['phone_number'] = 'Số điện thoại không hợp lệ';
+        }
         $phone_number = mysqli_real_escape_string($conn, trim($_POST['phone_number']));
     }
 
@@ -68,7 +76,7 @@ if (isset($_POST['checkout'])) {
             }
             header("Location: $pathHome/php/pages/order.php");
         } else {
-            echo "Error";
+            echo "Có lỗi xảy ra";
         }
     }
 }
@@ -189,7 +197,7 @@ if (isset($_POST['checkout'])) {
             <div class="py-4 flex flex-col gap-4 border-b">
                 <p class="flex items-center justify-between">Tạm tính
                     <span class="font-medium">
-                        <?php echo $totalPrice ?>₫
+                        <?php echo $priceFormatted = number_format($totalPrice, 0, ',', '.') . ' ₫'; ?>
                     </span>
                 </p>
                 <p class="flex items-center justify-between">Phí giao hàng
@@ -199,7 +207,7 @@ if (isset($_POST['checkout'])) {
 
             <p class="flex items-center justify-between">Tổng tiền
                 <span class="text-gray-500 text-[12px]">VND <strong
-                        class="text-[24px] text-black"><?php echo $totalPrice ?>₫
+                        class="text-[24px] text-black"><?php echo $priceFormatted = number_format($totalPrice, 0, ',', '.') . ''; ?>
                     </strong></span>
             </p>
         </div>

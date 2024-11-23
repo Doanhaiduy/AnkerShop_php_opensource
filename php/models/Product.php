@@ -41,6 +41,11 @@ class Product
         return $this->description;
     }
 
+    public function getCategoryId()
+    {
+        return $this->category;
+    }
+
     public function getCategory($conn)
     {
         $sql = "SELECT * FROM product_category WHERE id = $this->category";

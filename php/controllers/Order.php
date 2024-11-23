@@ -94,6 +94,11 @@ class OrderController
 
     public function addOrder($order, $cartId)
     {
+
+        if (!$this->checkAvailableQuantity($cartId)) {
+            return false;
+        }
+
         $userId = $order->getUser();
         $orderDate = $order->getDate();
         $orderFullName = $order->getFullName();
@@ -109,6 +114,17 @@ class OrderController
             $orderId = $this->getLastOrderId();
 
             $result = $this->addItemsToOrder($orderId);
+
+            /// update product quantity
+            $sql = "SELECT * FROM order_line WHERE order_id=$orderId";
+            $result = $this->conn->query($sql);
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $productId = $row['product_id'];
+                    $quantity = $row['quantity'];
+                    $this->updateProductQuantity($productId, $quantity);
+                }
+            }
 
             if ($result) {
                 $result = $this->removeCartItem($cartId);
@@ -158,6 +174,38 @@ class OrderController
             return $paymentMethod;
         }
     }
-}
 
-// $sql = "INSERT INTO shop_order (user_id, order_date, order_full_name, order_phone, shipping_address, payment_method_id, order_note) 
+    public function updateProductQuantity($productId, $quantity)
+    {
+        $sql = "UPDATE product SET stock = stock - $quantity WHERE id=$productId";
+        $result = @mysqli_query($this->conn, $sql);
+        if ($result) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function checkAvailableQuantity($cardId)
+    {
+        $sql = "SELECT * FROM shopping_cart_item WHERE cart_id=$cardId";
+        $result = $this->conn->query($sql);
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $productId = $row['product_id'];
+                $quantity = $row['quantity'];
+                $sql = "SELECT * FROM product WHERE id=$productId";
+                $result2 = $this->conn->query($sql);
+                if ($result2->num_rows > 0) {
+                    $row2 = $result2->fetch_assoc();
+                    if ($row2['stock'] < $quantity) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+}

@@ -115,7 +115,9 @@ if (isset($_POST['update_quantity'])) {
                     class="bg-gray-100 outline-none p-2"></textarea>
             </div>
             <div class="text-right">
-                <p class="">Tổng <strong class="text-[24px]"><?php echo $cartServicer->getTotalPrice($cartId) ?>₫</strong></p>
+                <p class="">Tổng <strong class="text-[24px]"><?php echo
+                                                                number_format($cartServicer->getTotalPrice($cartId), 0, ',', '.') . ' ₫';
+                                                                ?></strong></p>
                 <p class="my-2 italic text-[14px]">Giao hàng & tính thuế khi bán hàng
                 </p>
                 <div class="text-[14px]">
