@@ -8,6 +8,7 @@ require '../controllers/Order.php';
 require '../models/Order.php';
 require '../utils/index.php';
 require '../utils/validate.php';
+require '../config/vnpay.php';
 
 
 $pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
@@ -28,6 +29,8 @@ $errs = [];
 
 
 if (isset($_POST['checkout'])) {
+
+
     $date = date('Y-m-d H:i:s');
 
     if (empty($_POST['full_name'])) {
@@ -67,16 +70,20 @@ if (isset($_POST['checkout'])) {
     }
 
 
-
     if (empty($errs)) {
-        $order = new Order(null, $userId, $date, $full_name, $phone_number, $user_address, $payment_method_id, $order_note);
-        $result = $orderService->addOrder($order, $cartId);
-        if ($result) {
-            if (sendMail($_SESSION['user']['email_address'], 'Đơn hàng của bạn đã được đặt', 'Đơn hàng của bạn đã được đặt, vui lòng kiểm tra lại thông tin tại trang web, cảm ơn bạn đã mua hàng tại AnkerShop')) {
-            }
-            header("Location: $pathHome/php/pages/order.php");
+        if ($payment_method_id == 1) {
+            processVnpayPayment($conn, $cartId, $userId, $date, $full_name, $phone_number, $user_address, $payment_method_id, $order_note);
         } else {
-            echo "Có lỗi xảy ra";
+            $order = new Order(null, $userId, $date, $full_name, $phone_number, $user_address, $payment_method_id, $order_note);
+            $result = $orderService->addOrder($order, $cartId);
+            if ($result) {
+                if (sendMail($_SESSION['user']['email_address'], $_SESSION['user']['full_name'], $result, number_format($totalPrice, 0, ',', '.'))) {
+                    $success = "Đơn hàng của bạn đã được đặt. Mã đơn hàng: $vnp_TxnRef, Số tiền: $vnp_Amount VND.";
+                }
+                header("Location: $pathHome/php/pages/paymentStatus.php?status=success");
+            } else {
+                echo "Có lỗi xảy ra";
+            }
         }
     }
 }

@@ -129,7 +129,7 @@ class OrderController
             if ($result) {
                 $result = $this->removeCartItem($cartId);
                 if ($result) {
-                    return true;
+                    return $orderId;
                 } else {
                     return false;
                 }

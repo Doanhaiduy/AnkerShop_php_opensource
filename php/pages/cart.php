@@ -103,7 +103,12 @@ if (isset($_POST['update_quantity'])) {
                 foreach ($cartProduct as $product) {
                     $productDetails = $productServicer->getProductById($product->getProduct());
                     cartItem($product->getId(), $productDetails->getName(), $productDetails->getPrice(), $productDetails->getImage(), $product->getQuantity());
-                } ?>
+                }
+                if (count($cartProduct) == 0) {
+                    echo "<tr><td colspan='4' class='text-center'>Không có sản phẩm nào trong giỏ hàng</td></tr>";
+                    echo "<tr><td colspan='4' class='text-center'><a href='$pathHome/index.php' class='text-primary'>Tiếp tục mua sắm</a></td></tr>";
+                }
+                ?>
 
             </tbody>
         </table>

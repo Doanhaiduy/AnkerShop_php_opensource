@@ -42,7 +42,8 @@ class CartController
     {
 
         if ($this->checkHasProduct($cartId, $productId)) {
-            $sql = "SELECT quantity FROM shopping_cart_item WHERE cart_id = $cartId AND product_id = $productId";
+
+            $sql = "SELECT * FROM shopping_cart_item WHERE cart_id = $cartId AND product_id = $productId";
             $result = $this->conn->query($sql);
 
             if ($result->num_rows > 0) {
