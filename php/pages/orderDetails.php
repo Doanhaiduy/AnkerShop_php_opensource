@@ -1,4 +1,27 @@
 <?php
+include '../config/module.php';
+if (isset($_GET['orderid'])) {
+    $orderId = $_GET['orderid'];
+    $order = $orderService->getOrderById($orderId);
+    if (!$order) {
+        header("Location: $pathHome/php/pages/order.php");
+    } else if ($order->getUser() != $userId) {
+        header("Location: $pathHome/php/pages/order.php");
+    } else {
+        $orderItems = $orderService->getOrderItems($orderId);
+        $orderId = $order->getId();
+        $orderDate = $order->getDate();
+        $orderFullName = $order->getFullName();
+        $orderPhone = $order->getPhoneNumber();
+        $shippingAddress = $order->getAddress();
+        $paymentMethodId = $order->getPayment();
+        $orderNote = $order->getNote();
+        $totalPrice = $orderService->getTotalPrice($orderId);
+        $paymentMethod = $orderService->getPaymentMethod($paymentMethodId)->getName();
+    }
+} else {
+    header("Location: $pathHome/index.php");
+}
 
 ?>
 
@@ -43,29 +66,59 @@
     <div class="py-12 bg-slate-300 text-center mt-[116px]">
         <a class="text-slate-500 mx-2" href="/">Trang chủ</a> / <span
             class="mx-2 text-slate-500">Đơn mua</span> /
-        <span>#DH053</span>
+        <span>#DH<?php echo $orderId ?>
+        </span>
     </div>
     <!-- Ordered -->
     <div class="bg-white p-8 rounded-md w-full">
         <div class="flex items-center justify-between pb-6">
             <div>
                 <h2 class="text-gray-600 font-semibold text-[30px]">
-                    Chi tiết đơn mua #12345
+                    Chi tiết đơn mua # <?php echo $orderId; ?>
                 </h2>
             </div>
         </div>
         <div class="grid grid-cols-4 gap-4 p-4 border rounded-lg">
             <div>
                 <p class="text-[18px] font-semibold">Mã đơn mua</p>
-                <span>#12345</span>
+                <span>#<?php echo $orderId ?></span>
             </div>
             <div>
                 <p class="text-[18px] font-semibold">Ngày tạo đơn</p>
-                <span>01/01/2023</span>
+                <span>
+                    <?php echo $orderDate ?>
+                </span>
             </div>
             <div>
-                <p class="text-[18px] font-semibold">Phương thức vận chuyển</p>
-                <span>Giao hàng nhanh</span>
+                <p class="text-[18px] font-semibold">Họ và tên</p>
+                <span>
+                    <?php echo $orderFullName ?>
+                </span>
+            </div>
+            <div>
+                <p class="text-[18px] font-semibold">Số điện thoại</p>
+                <span>
+                    <?php echo $orderPhone ?>
+                </span>
+            </div>
+            <div>
+                <p class="text-[18px] font-semibold">Địa chỉ giao hàng</p>
+                <span>
+                    <?php echo $shippingAddress ?>
+                </span>
+            </div>
+
+            <div>
+                <p class="text-[18px] font-semibold">Ghi chú</p>
+                <span>
+                    <?php echo $orderNote ?>
+                </span>
+            </div>
+            <div>
+                <p class="text-[18px] font-semibold">Phương thức thanh toán</p>
+                <span>
+                    <?php echo $paymentMethod ?>
+                </span>
             </div>
             <div>
                 <p class="text-[18px] font-semibold">Trạng thái</p>
@@ -96,29 +149,52 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="px-5 py-5 border-b border-gray-200 bg-white text-[18px]">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 w-[120px] h-[150px]">
-                                            <img class="w-full h-full object-cover" src="path/to/image.jpg" alt="" />
+
+                            <?php
+                            foreach ($orderItems as $orderItem) {
+                                $productId = $orderItem->getProduct();
+                                $product = $productService->getProductById($productId);
+                                $productName = $product->getName();
+                                $productPrice = $product->getPrice();
+                                $productImage = $product->getImage();
+                                $quantity = $orderItem->getQuantity();
+                                $total = $productPrice * $quantity;
+                            ?>
+                                <tr>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-[18px]">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 w-[120px] h-[150px]">
+                                                <img class="w-full h-full object-cover" src="<?php echo $productImage ?>" alt="<?php $productName ?>" />
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 bg-white text-[18px]">
-                                    <p class="text-gray-900 whitespace-no-wrap">Sản phẩm A</p>
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 bg-white text-[18px]">
-                                    <p class="text-gray-900 whitespace-no-wrap">200,000đ</p>
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 bg-white text-[18px]">
-                                    <p class="text-gray-900 whitespace-no-wrap">2</p>
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 bg-white text-[18px]">
-                                    <p class="text-gray-900 whitespace-no-wrap">400,000đ</p>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-[18px]">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            <?php echo $productName ?>
+                                        </p>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-[18px]">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            <?php echo number_format($productPrice) ?>đ
+                                        </p>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-[18px]">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            <?php echo $quantity ?>
+                                        </p>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-[18px]">
+                                        <p class="text-gray-900 whitespace-no-wrap">
+                                            <?php echo number_format($total) ?>đ
+                                        </p>
+                                    </td>
+                                </tr>
+                            <?php
+                            }
+                            ?>
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>
@@ -129,20 +205,30 @@
                 <div class="flex justify-center items-center w-full space-y-4 flex-col border-gray-200 border-b pb-4">
                     <div class="flex justify-between w-full">
                         <p class="text-base leading-4 text-gray-800">Tổng tạm tính</p>
-                        <p class="text-base leading-4 text-gray-600">380,000đ</p>
+                        <p class="text-base leading-4 text-gray-600">
+                            <?php echo number_format($totalPrice) ?>đ
+                        </p>
                     </div>
                     <div class="flex justify-between items-center w-full">
                         <p class="text-base leading-4 text-gray-800">Giảm giá</p>
                         <p class="text-base leading-4 text-gray-600">0đ (0%)</p>
                     </div>
                     <div class="flex justify-between items-center w-full">
+                        <p class="text-base leading-4 text-gray-800">
+                            Phương thức thanh toán
+                        </p>
+                        <p class="text-base leading-4 text-gray-600">
+                            <?php echo $paymentMethod ?>
+                        </p>
+                    </div>
+                    <div class="flex justify-between items-center w-full">
                         <p class="text-base leading-4 text-gray-800">Phí vận chuyển</p>
-                        <p class="text-base leading-4 text-gray-600">20,000đ</p>
+                        <p class="text-base leading-4 text-gray-600">0đ</p>
                     </div>
                 </div>
                 <div class="flex justify-between items-center w-full">
                     <p class="text-base font-semibold leading-4 text-gray-800">Tổng</p>
-                    <p class="text-base font-semibold leading-4 text-gray-600">400,000đ</p>
+                    <p class="text-base font-semibold leading-4 text-gray-600"><?php echo number_format($totalPrice) ?>đ</p>
                 </div>
             </div>
         </div>

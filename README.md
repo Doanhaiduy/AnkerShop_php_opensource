@@ -37,7 +37,7 @@ $vnp_Returnurl = "http://localhost:8080/ankershop/php/pages/returnvnpay.php";
 <a href="https://doanhaiduy.id.vn/php/pages/order.php" class="track-order-btn">Theo dõi đơn hàng</a>
 ```
 
-## 5. `php/pages/register.php` (dòng 63)
+## 5. `php/pages/register.php` (dòng 58)
 
 ```php
 // Thay đổi đường dẫn verify theo domain hoặc port đang chạy: ví dụ localhost:8080/ankershop/php/pages/verifyAccount.php
@@ -45,7 +45,7 @@ $vnp_Returnurl = "http://localhost:8080/ankershop/php/pages/returnvnpay.php";
 $urlVerify = 'https://doanhaiduy.id.vn/php/pages/verifyAccount.php?token=' . $token . '&email=' . $email;
 ```
 
-## 6. `php/pages/verifyAccount.php` (dòng 40)
+## 6. `php/pages/verifyAccount.php` (dòng 35)
 
 ```php
 // Thay đổi đường dẫn verify theo domain hoặc port đang chạy: ví dụ localhost:8080/ankershop/php/pages/verifyAccount.php

@@ -46,6 +46,7 @@ if ($vnp_SecureHash === $expectedSecureHash) {
     if ($vnp_ResponseCode === '00') {
         $order = new Order(null, $inputDataQuery['userId'], date('Y-m-d H:i:s'), $inputDataQuery['full_name'], $inputDataQuery['phone_number'], $inputDataQuery['user_address'], $inputDataQuery['payment_method_id'], $inputDataQuery['order_note']);
         $result = $orderService->addOrder($order, $cartId);
+
         if ($result) {
             if (sendMailOrder($_SESSION['user']['email_address'], $_SESSION['user']['full_name'], $result, number_format($vnp_Amount, 0, ',', '.'))) {
                 $success = "Đơn hàng của bạn đã được đặt. Mã đơn hàng: $result, Số tiền: $vnp_Amount VND.";

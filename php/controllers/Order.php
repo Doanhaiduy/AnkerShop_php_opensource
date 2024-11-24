@@ -13,11 +13,14 @@ class OrderController
         $this->conn = $conn;
     }
 
-
     public function getOrderById($id)
     {
         $sql = "SELECT * FROM shop_order WHERE id=$id";
         $result = $this->conn->query($sql);
+        if (!$result) {
+            return false;
+        }
+
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $order = new Order($row['id'], $row['user_id'], $row['order_date'], $row['order_full_name'], $row['order_phone'], $row['shipping_address'], $row['payment_method_id'], $row['order_note']);
@@ -148,6 +151,20 @@ class OrderController
         $result = $this->conn->query($sql);
         $row = $result->fetch_assoc();
         return $row['total'];
+    }
+
+    public function getOrderItems($orderId)
+    {
+        $sql = "SELECT * FROM order_line WHERE order_id=$orderId";
+        $result = $this->conn->query($sql);
+        $orderItems = [];
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $orderItem = new OrderItem($row['id'], $row['order_id'], $row['product_id'], $row['quantity'], $row['price']);
+                $orderItems[] = $orderItem;
+            }
+        }
+        return $orderItems;
     }
 
     public function getPaymentMethods()

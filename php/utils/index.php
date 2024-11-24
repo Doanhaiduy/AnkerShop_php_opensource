@@ -140,7 +140,7 @@ function sendMailOrder($to, $customerName, $orderNumber, $totalAmount)
                 </div>
                 <p>Bạn có thể theo dõi tình trạng đơn hàng của mình tại liên kết
                     dưới đây:</p>
-                <a href="http://localhost:8080/php/pages/order.php"
+                <a href="http://localhost:8080/ankershop/php/pages/orderdetails.php?orderid=' . htmlspecialchars($orderNumber) . '"
                     class="track-order-btn">Theo dõi đơn hàng</a>
                 <p>Nếu bạn có bất kỳ câu hỏi hoặc cần hỗ trợ, vui lòng liên hệ
                     với chúng tôi qua email <a

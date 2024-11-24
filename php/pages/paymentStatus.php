@@ -14,8 +14,6 @@ if (isset($_GET['status'])) {
         }
     }
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -75,7 +73,7 @@ if (isset($_GET['status'])) {
             <p class="text-[20px]">Có lỗi xảy ra trong quá trình đặt hàng</p>
         <?php } ?>
         <a href="/" class="text-blue-600">Quay lại trang chủ</a>
-        <a href="<?php echo  $pathHome . "/php/pages/order.php" ?>" class="text-blue-600">Xem danh sách đơn hàng</a>
+        <a href="<?php echo  $pathHome . "/php/pages/checkout.php" ?>" class="text-blue-600">Thanh toán lại</a>
     </div>
     <!-- Info -->
 

@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $urlVerify = 'http://localhost:8080/ankershop/php/pages/verifyAccount.php?token=' . $token . '&email=' . $email;
 
         if ($authService->checkEmailAlreadyExists($email)) {
-            $result = sendMailVerify($email, "___", $urlVerify);
+            $result = sendMailVerify($email, $email, $urlVerify);
             if ($result) {
                 header("Location: $pathHome/php/pages/confirmEmail.php");
                 exit();
