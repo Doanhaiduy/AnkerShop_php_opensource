@@ -73,9 +73,9 @@ class CartController
         }
     }
 
-    public function removeProductFromCart($productId)
+    public function removeProductFromCart($productCartId)
     {
-        $sql = "DELETE FROM shopping_cart_item WHERE id = $productId";
+        $sql = "DELETE FROM shopping_cart_item WHERE id = $productCartId";
 
         $result = @mysqli_query($this->conn, $sql);
 
@@ -104,6 +104,10 @@ class CartController
         $sql = "SELECT SUM(product.price * shopping_cart_item.quantity) AS total FROM shopping_cart_item JOIN product ON shopping_cart_item.product_id = product.id WHERE shopping_cart_item.cart_id = $cartId";
 
         $result = $this->conn->query($sql);
+
+        if ($result->num_rows === 0) {
+            return 0;
+        }
 
         $row = $result->fetch_assoc();
 

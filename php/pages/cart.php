@@ -1,12 +1,6 @@
 <?php
 require '../config/module.php';
 
-$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
-
-$userId = $_SESSION['user']['id'];
-$cartId = $_SESSION['user']['cart_id'];
-
-
 $cartProduct = $cartService->getCartProducts($cartId);
 
 if (isset($_POST['delete_item'])) {

@@ -1,21 +1,21 @@
 <?php
 require "../config/module.php";
 
-if (isset($_SESSION['user'])) {
-    $user = $_SESSION['user'];
-}
-
 $errs = [];
 
-if (isset($_GET['details'])) {
+if (isset($_GET['product_id'])) {
     if (empty($_GET['product_id'])) {
         $err[] = "Không tìm thấy sản phẩm";
+        header("Location: $pathHome/index.php");
+        exit();
     } else {
         $product_id = mysqli_real_escape_string($conn, $_GET['product_id']);
     }
-
-
     $product = $productService->getProductById($product_id);
+    if (!$product) {
+        header("Location: $pathHome/index.php");
+        exit();
+    }
     $product_name = $product->getName();
     $product_price = $product->getPrice();
     $product_image = $product->getImage();
@@ -23,6 +23,9 @@ if (isset($_GET['details'])) {
     $product_category = $product->getCategory($conn);
     $product_stock = $product->getStock();
     $productSameCategory = $productService->getProductsByCategory($product->getCategoryId());
+} else {
+    header("Location: $pathHome/index.php");
+    exit();
 }
 
 if (isset($_POST['quantity'])) {

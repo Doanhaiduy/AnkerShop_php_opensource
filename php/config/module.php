@@ -17,6 +17,7 @@ $authService = new AuthController($conn);
 
 
 $pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
+
 if (isset($_SESSION['user'])) {
     $userId = $_SESSION['user']['id'];
     $cartId = $_SESSION['user']['cart_id'];

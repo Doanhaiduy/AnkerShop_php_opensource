@@ -59,6 +59,7 @@ if (isset($_POST['logout'])) {
                 <?php if (isset($_SESSION['user'])) {
                     echo $_SESSION['user']['full_name'];
                     echo ' <form method="post" class="absolute bg-white p-2 group-hover:block hidden rounded-[8px]">
+                    <a href="' . BASE_URL . 'php/pages/order.php">Đơn hàng</a>
                     <input type="submit" name="logout" value="Đăng Xuất">
                 </form>';
                 } else {

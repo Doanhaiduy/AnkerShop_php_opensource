@@ -3,11 +3,10 @@ include_once '../models/User.php';
 session_start();
 
 class AuthController
-
 {
 
     protected $conn;
-    protected $timeout = 1800; // 30 minutes
+    protected $timeout = 1800;
 
     public function __construct($conn)
     {
@@ -71,7 +70,6 @@ class AuthController
 
             if (password_verify($password, $user->getPassword()) && $user->getEmail() == $email) {
                 $idCart = $this->getCartId($user->getId());
-
                 $_SESSION['expire'] = time() + $this->timeout;
                 $_SESSION['user'] = [
                     'id' => $user->getId(),

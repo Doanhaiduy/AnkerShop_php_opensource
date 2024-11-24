@@ -14,6 +14,9 @@ class ProductController
     {
         $sql = "SELECT * FROM product_category WHERE id=$id";
         $result = $this->conn->query($sql);
+        if (!$result) {
+            return false;
+        }
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $category = new Category($row['id'], $row['category_name']);
@@ -40,6 +43,9 @@ class ProductController
     {
         $sql = "SELECT * FROM product WHERE id=$id";
         $result = $this->conn->query($sql);
+        if (!$result) {
+            return false;
+        }
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $product = new Product($row['id'], $row['name'], $row['price'], $row['description'], $row['category_id'], $row['product_image'], $row['stock']);

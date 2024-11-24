@@ -71,9 +71,9 @@ if (isset($_GET['status'])) {
                 hàng thất bại <i
                     class="fa-regular fa-circle-times text-red-400"></i> </h2>
             <p class="text-[20px]">Có lỗi xảy ra trong quá trình đặt hàng</p>
+            <a href="<?php echo  $pathHome . "/php/pages/checkout.php" ?>" class="text-blue-600">Thanh toán lại</a>
         <?php } ?>
-        <a href="/" class="text-blue-600">Quay lại trang chủ</a>
-        <a href="<?php echo  $pathHome . "/php/pages/checkout.php" ?>" class="text-blue-600">Thanh toán lại</a>
+        <a href="/" class="text-blue-600">Tiếp tục mua sắm</a>
     </div>
     <!-- Info -->
 

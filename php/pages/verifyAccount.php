@@ -2,12 +2,14 @@
 require '../config/module.php';
 
 $err = "";
+$isVerified = false;
 
 if (isset($_GET['token']) && !empty($_GET['token']) && isset($_GET['email']) && !empty($_GET['email'])) {
     $checkVerify = $authService->checkVerify($_GET['email']);
 
     if ($checkVerify) {
         $err = "Email đã được xác minh";
+        $isVerified = true;
     } else if (verifyToken($_GET['email'], $_GET['token'])) {
         $email = $_GET['email'];
         $result = $authService->verifyEmail($email);
@@ -29,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_GET['email']) && !empty($_GET['email'])) {
         $email = $_GET['email'];
 
-        $token = generateToken($_GET['email']);
+        $token = generateToken($email);
         // Thay đổi đường dẫn verify theo domain hoặc port đang chạy: ví dụ localhost:8080/ankershop/php/pages/verifyAccount.php
         // Thay đổi domain thành domain thật khi chạy trên production: ví dụ domain.com/ankershop/php/pages/verifyAccount.php
         $urlVerify = 'http://localhost:8080/ankershop/php/pages/verifyAccount.php?token=' . $token . '&email=' . $email;
@@ -92,9 +94,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         class="py-12 flex-grow flex flex-col items-center justify-center mt-32 text-center px-6 mt-[116px] min-h-[70vh]">
         <?php if ($err) : ?>
             <h1 class="text-2xl font-semibold text-red-500 mb-4"><?php echo $err; ?></h1>
-            <form method="post">
-                <button type="submit" class="btn btn-primary">Gửi lại email xác minh</button>
-            </form>
+            <?php if (!$isVerified) : ?>
+                <form method="post">
+                    <button type="submit" class="btn btn-primary">Gửi lại email xác minh</button>
+                </form>
+            <?php endif; ?>
         <?php else : ?>
             <h1 class="text-2xl font-semibold text-gray-800 mb-4">Xác minh email <?php echo $_GET['email']; ?> thành công</h1>
             <p class="text-gray-600 mb-6">Tài khoản của bạn đã được kích hoạt. Bạn có thể đăng nhập và sử dụng dịch vụ của chúng tôi.</p>

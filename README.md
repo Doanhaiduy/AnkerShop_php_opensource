@@ -34,7 +34,7 @@ $vnp_Returnurl = "http://localhost:8080/ankershop/php/pages/returnvnpay.php";
 
 ```php
 // thay đổi dòng 143 thành domain hoặc localhost có cổng đang chạy (ví dụ: localhost:8080/ankershop hoặc doanhaiduy.id.vn hoặc localhost/ankershop)
-<a href="https://doanhaiduy.id.vn/php/pages/order.php" class="track-order-btn">Theo dõi đơn hàng</a>
+<a href="https://doanhaiduy.id.vn/php/pages/orderdetails.php?orderid=' . htmlspecialchars($orderNumber) . '" class="track-order-btn">Theo dõi đơn hàng</a>
 ```
 
 ## 5. `php/pages/register.php` (dòng 58)

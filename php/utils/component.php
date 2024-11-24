@@ -7,7 +7,7 @@ function productItem($productid, $productname, $productprice, $productimg)
 
     $formHeader = "<form action=\"" . BASE_URL . "php/pages/details.php\" ";
     $element =  "class=\" bg-white border mx-2 border-gray-200 rounded-lg shadow \" id=\"$productid\"  method=\"get\">
-    <button type=\"submit\" class=\"relative group\" name=\"details\">
+    <button type=\"submit\" class=\"relative group\">
         <img class=\"p-4 rounded-t-lg w-full aspect-square\"
             src=\"$productimg\"
             alt=\"$productname\" />
@@ -153,6 +153,12 @@ function orderedItem($orderid, $orderdate, $orderprice, $paymentMethod)
                             $paymentMethod 
                         </p>
                     </td>
+                    <td
+                        class=\"px-5 py-5 border-b border-gray-200 bg-white text-sm\">
+                        <a href=\"" . BASE_URL . "php/pages/orderDetails.php?orderid=$orderid\" 
+                            class=\"text-indigo-600 hover:text-indigo-900\">Xem chi tiết</a>
+                    </td>
+
 
                 </tr>";
     echo $element;

@@ -7,8 +7,8 @@ function processVnpayPayment($conn, $cartId, $userId, $date, $full_name, $phone_
     $totalPrice = $cartService->getTotalPrice($cartId);
 
     // VNPAY configuration
-    $vnp_TmnCode = "MHGV26YG";
-    $vnp_HashSecret = "YNZ25C7DP14IF8QR5EBEVC5GIAWU033G";
+    $vnp_TmnCode = "MHGV26YG"; // Mã website tại VNPAY
+    $vnp_HashSecret = "YNZ25C7DP14IF8QR5EBEVC5GIAWU033G"; // Chuỗi bí mật
     $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     // Thay đổi liên kết thành https:domain.com/paymentv2/vpcpay.html khi chạy trên production (ví dụ ở đây là domain: doanhaiduy.id.vn)
     // Đối với localhost: thay đổi port 8080 thành port đang chạy (thường là 80) và thêm tên thư mục nếu đó là thư mục gốc (ở đây là ankershop)

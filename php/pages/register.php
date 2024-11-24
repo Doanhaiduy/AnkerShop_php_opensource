@@ -2,7 +2,7 @@
 include_once '../config/module.php';
 $errs = [];
 
-if (isset($_POST['register'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (empty($_POST['fullName'])) {
         $errs["fullName"] = 'Họ và tên không được để trống';
     } else {
@@ -51,12 +51,12 @@ if (isset($_POST['register'])) {
         } else {
 
             $result = $authService->register($fullName, $email, $password, $phoneNumber, $gender = 1, $address);
+
             if ($result) {
                 $token = generateToken($email);
                 // Thay đổi đường dẫn verify theo domain hoặc port đang chạy: ví dụ localhost:8080/ankershop/php/pages/verifyAccount.php
                 // Thay đổi domain thành domain thật khi chạy trên production: ví dụ domain.com/ankershop/php/pages/verifyAccount.php
                 $urlVerify = 'http://localhost:8080/ankershop/php/pages/verifyAccount.php?token=' . $token . '&email=' . $email;
-
                 if (sendMailVerify($email, $fullName, $urlVerify)) {
                     header("Location: $pathHome/php/pages/confirmEmail.php");
                 } else {
