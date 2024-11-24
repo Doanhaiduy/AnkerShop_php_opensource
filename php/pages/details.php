@@ -1,18 +1,9 @@
 <?php
-session_start();
-$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
-
-require "../utils/component.php";
-require "../config/db.php";
-require "../controllers/Product.php";
-require "../controllers/Cart.php";
+require "../config/module.php";
 
 if (isset($_SESSION['user'])) {
     $user = $_SESSION['user'];
 }
-
-$productService = new ProductController($conn);
-$cartService = new CartController($conn);
 
 $errs = [];
 

@@ -1,5 +1,5 @@
 <?php
-$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
+require '../config/module.php';
 
 if (isset($_GET['status'])) {
     $status = $_GET['status'];

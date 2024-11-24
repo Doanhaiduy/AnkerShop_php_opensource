@@ -1,25 +1,18 @@
 <?php
-require '../config/db.php';
-require '../utils/component.php';
-require '../controllers/Cart.php';
-require '../controllers/Product.php';
-require '../controllers/Auth.php';
+require '../config/module.php';
 
 $pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
-
-$productServicer = new ProductController($conn);
-$cartServicer = new CartController($conn);
 
 $userId = $_SESSION['user']['id'];
 $cartId = $_SESSION['user']['cart_id'];
 
 
-$cartProduct = $cartServicer->getCartProducts($cartId);
+$cartProduct = $cartService->getCartProducts($cartId);
 
 if (isset($_POST['delete_item'])) {
     $productCartId = $_POST['product_cart_id'];
     if ($productCartId) {
-        $result = $cartServicer->removeProductFromCart($productCartId);
+        $result = $cartService->removeProductFromCart($productCartId);
         if ($result) {
             header("Location: $pathHome/php/pages/cart.php");
         };
@@ -41,7 +34,7 @@ if (isset($_POST['update_quantity'])) {
 
 
     if ($productCartId && $quantity) {
-        $result = $cartServicer->updateProductQuantity($productCartId, $quantity);
+        $result = $cartService->updateProductQuantity($productCartId, $quantity);
         if ($result) {
             header("Location: $pathHome/php/pages/cart.php");
         };
@@ -107,7 +100,7 @@ if (isset($_POST['update_quantity'])) {
             <tbody>
                 <?php
                 foreach ($cartProduct as $product) {
-                    $productDetails = $productServicer->getProductById($product->getProduct());
+                    $productDetails = $productService->getProductById($product->getProduct());
                     cartItem($product->getId(), $productDetails->getName(), $productDetails->getPrice(), $productDetails->getImage(), $product->getQuantity(), $productDetails->getStock());
                 }
                 if (count($cartProduct) == 0) {
@@ -127,7 +120,7 @@ if (isset($_POST['update_quantity'])) {
             </div>
             <div class="text-right">
                 <p class="">Tổng <strong class="text-[24px]"><?php echo
-                                                                number_format($cartServicer->getTotalPrice($cartId), 0, ',', '.') . ' ₫';
+                                                                number_format($cartService->getTotalPrice($cartId), 0, ',', '.') . ' ₫';
                                                                 ?></strong></p>
                 <p class="my-2 italic text-[14px]">Giao hàng & tính thuế khi bán hàng
                 </p>

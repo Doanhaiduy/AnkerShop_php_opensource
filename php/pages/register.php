@@ -1,11 +1,6 @@
 <?php
-include_once '../controllers/Auth.php';
-include_once '../config/db.php';
-include_once '../utils/validate.php';
-include_once '../utils/index.php';
-$auth = new AuthController($conn);
+include_once '../config/module.php';
 $errs = [];
-$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
 
 if (isset($_POST['register'])) {
     if (empty($_POST['fullName'])) {
@@ -51,11 +46,11 @@ if (isset($_POST['register'])) {
     }
 
     if (empty($errs)) {
-        if ($auth->checkEmailAlreadyExists($email)) {
+        if ($authService->checkEmailAlreadyExists($email)) {
             $errs["email"] = 'Email đã tồn tại';
         } else {
 
-            $result = $auth->register($fullName, $email, $password, $phoneNumber, $gender = 1, $address);
+            $result = $authService->register($fullName, $email, $password, $phoneNumber, $gender = 1, $address);
             if ($result) {
                 $token = generateToken($email);
                 // Thay đổi đường dẫn verify theo domain hoặc port đang chạy: ví dụ localhost:8080/ankershop/php/pages/verifyAccount.php

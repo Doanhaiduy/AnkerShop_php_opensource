@@ -1,11 +1,5 @@
 <?php
-include '../models/Order.php';
-include '../config/db.php';
-include '../controllers/Order.php';
-include '../utils/component.php';
-
-$orderService = new OrderController($conn);
-
+require '../config/module.php';
 $orders = $orderService->getOrdersByUser($_SESSION['user']['id']);
 
 ?>

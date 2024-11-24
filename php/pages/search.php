@@ -1,11 +1,7 @@
 <?php
-require '../controllers/Product.php';
-require '../config/db.php';
-require '../utils/component.php';
+require '../config/module.php';
 
-$productService = new ProductController($conn);
 $products = $productService->getAllProducts();
-
 
 if (isset($_GET['search'])) {
     $search = mysqli_real_escape_string($conn, $_GET['search']);

@@ -1,20 +1,5 @@
 <?php
-require '../config/db.php';
-require '../utils/component.php';
-require '../controllers/Cart.php';
-require '../controllers/Product.php';
-require '../controllers/Auth.php';
-require '../controllers/Order.php';
-require '../models/Order.php';
-require '../utils/index.php';
-require '../utils/validate.php';
-require '../config/vnpay.php';
-
-$orderService = new OrderController($conn);
-$userId = $_SESSION['user']['id'];
-$cartId = $_SESSION['user']['cart_id'];
-$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
-
+require '../config/module.php';
 
 $error = "";
 $success = "";
@@ -26,6 +11,7 @@ $vnp_OrderInfo = $_GET['vnp_OrderInfo'];
 $vnp_SecureHash = $_GET['vnp_SecureHash'];
 
 $vnp_HashSecret = "YNZ25C7DP14IF8QR5EBEVC5GIAWU033G";
+
 foreach ($_GET as $key => $value) {
     if (substr($key, 0, 4) == "vnp_") {
         $inputData[$key] = $value;

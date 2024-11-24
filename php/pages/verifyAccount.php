@@ -1,12 +1,7 @@
 <?php
-require '../utils/index.php';
-require '../controllers/Auth.php';
-require '../config/db.php';
+require '../config/module.php';
 
-$authService = new AuthController($conn);
 $err = "";
-
-$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
 
 if (isset($_GET['token']) && !empty($_GET['token']) && isset($_GET['email']) && !empty($_GET['email'])) {
     $checkVerify = $authService->checkVerify($_GET['email']);

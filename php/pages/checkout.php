@@ -1,24 +1,5 @@
 <?php
-require '../config/db.php';
-require '../utils/component.php';
-require '../controllers/Cart.php';
-require '../controllers/Product.php';
-require '../controllers/Auth.php';
-require '../controllers/Order.php';
-require '../models/Order.php';
-require '../utils/index.php';
-require '../utils/validate.php';
-require '../config/vnpay.php';
-
-
-$pathHome = explode('/php', $_SERVER['PHP_SELF'])[0];
-
-$cartService = new CartController($conn);
-$productService = new ProductController($conn);
-$orderService = new OrderController($conn);
-
-$userId = $_SESSION['user']['id'];
-$cartId = $_SESSION['user']['cart_id'];
+require '../config/module.php';
 
 $cartProduct = $cartService->getCartProducts($cartId);
 $totalPrice = $cartService->getTotalPrice($cartId);
@@ -29,8 +10,6 @@ $errs = [];
 
 
 if (isset($_POST['checkout'])) {
-
-
     $date = date('Y-m-d H:i:s');
 
     if (empty($_POST['full_name'])) {
